@@ -1,0 +1,3 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\800dec16-3afb-4199-bc00-a82d6d7b9e89

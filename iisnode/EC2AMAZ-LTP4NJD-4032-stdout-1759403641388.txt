@@ -1,0 +1,26 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\4fe8ee9b-1e7c-4154-8e7e-8c30c97e7760
+UserEnity { username: 'student@test.com', password: '123456' }
+{ OgrenciID: 63, Sinif: '5-A' }
+{ OgrenciID: 63, Sinif: '5-A' }
+UserEnity { username: 'teacher@test.com', password: '123456' }
+{
+  Sinif: 'MAT-KURS',
+  Tarih: '2025-10-02',
+  DersSaati: '09:10-09:50',
+  ProgramID: 2088
+}
+{ Ders: 'Matematik', Sinif: 'MAT-KURS' }
+{
+  Sinif: '5-A',
+  Tarih: '2025-10-02',
+  DersSaati: '10:00-10:40',
+  ProgramID: 2116
+}
+{ Ders: 'Fen Bilimleri', Sinif: '5-A' }
+Bildirim başarıyla gönderildi: projects/okulkocu-d8a73/messages/0:1759403790150248%bbbac871bbbac871
+Bildirim başarıyla gönderildi: projects/okulkocu-d8a73/messages/0:1759403790162674%bbbac871bbbac871
+Bildirim başarıyla gönderildi: projects/okulkocu-d8a73/messages/1759403790146024
+Bildirim başarıyla gönderildi: projects/okulkocu-d8a73/messages/1759403790153756
+Bildirim başarıyla gönderildi: projects/okulkocu-d8a73/messages/1759403790153138

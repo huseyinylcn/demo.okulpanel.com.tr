@@ -1,0 +1,3 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\4f8c8077-17f6-4a5a-af0c-9078c25c9d03

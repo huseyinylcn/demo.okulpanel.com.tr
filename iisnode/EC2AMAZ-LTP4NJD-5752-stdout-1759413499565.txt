@@ -1,0 +1,6 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\a19cd898-b712-4c97-b7a5-39350ee90c05
+UserEnity { username: 'student@test.com', password: '123456' }
+{ OgrenciID: 63, Sinif: '5-A' }
+{ OgrenciID: 63, Sinif: '5-A' }

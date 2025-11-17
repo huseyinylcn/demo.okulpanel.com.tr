@@ -1,0 +1,3 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\ac084e94-38d5-421d-a512-b2b04de56774

@@ -1,0 +1,3 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\de01df86-1352-4667-bd39-3db44d777eaa

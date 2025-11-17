@@ -1,0 +1,15 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\bd4dcaf0-64cb-4a6d-972b-d5c53d3c956f
+UserEnity { username: 'teacher@test.com', password: '123456' }
+UserEnity { username: 'teacher@test.com', password: '123456' }
+UserEnity { username: 'teacher@test.com', password: '123456' }
+{
+  Sinif: 'MAT-KURS',
+  Tarih: '2025-10-02',
+  DersSaati: '09:10-09:50',
+  ProgramID: 2088
+}
+{ Ders: 'Matematik', Sinif: 'MAT-KURS' }
+UserEnity { username: 'admin@test.com', password: '123456' }
+UserEnity { username: 'admin@test.com', password: '123456' }

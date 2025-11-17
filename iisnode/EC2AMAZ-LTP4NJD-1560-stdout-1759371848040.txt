@@ -1,0 +1,3 @@
+[dotenv@17.2.1] injecting env (7) from .env -- tip: ⚙️  override existing env vars with { override: true }
+Bağlantı Başarılı :) true
+http://localhost:\\.\pipe\f26f2176-6459-46eb-b62e-dfd7244dc99b

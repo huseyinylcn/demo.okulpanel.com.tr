@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <title></title>
+    <link rel="shortcut icon" href="./uploads/logo.png" type="image/x-icon">
+
+<body>
+
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        /* HTML/CSS piksel değil mm bazlı yazılmıştır; böylece PDF'te kesin boyut çıkar */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 297mm;
+            /* A4 height in mm (landscape -> genişlik 297mm) */
+            height: 210mm;
+            /* A4 width in mm (landscape -> yükseklik 210mm) */
+            max-height: 210mm;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            -webkit-print-color-adjust: exact;
+            /* arka plan renkleri yazdırmak için */
+        }
+
+        .box {
+
+            width: 297mm;
+            /* A4 height in mm (landscape -> genişlik 297mm) */
+            height: 210mm;
+            border: 1px solid gray;
+        }
+
+        th {
+            background-color: rgb(233, 233, 233);
+            border: 1px solid black;
+            text-align: center;
+            /* font-family: sans-serif; */
+            font-weight: 400;
+            font-size: 16px;
+            width: 49.5mm;
+        }
+
+        td {
+            width: 49.5mm;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            border: 1px solid black;
+
+        }
+
+        tbody tr {
+            /* background: rgb(255, 255, 255); */
+
+            max-height: 24.25mm;
+            height: 24.25mm;
+
+            margin: 0;
+            padding: 0;
+        }
+
+        .xx {
+            height: 4mm;
+
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .first {
+            max-width: 10mm;
+            font-size: 13px;
+            text-align: center;
+
+        }
+        span{
+             margin: 0;
+            padding: 0;
+
+            /* border: 1px solid black; */
+            max-height:2.00mm;
+            height: 2.00mm;
+            overflow: hidden;
+            font-weight: bold;
+  
+    
+        }
+
+        li {
+            /* font-size: 5px; */
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+
+            max-height: 16.00mm;
+            height: 16.00mm;
+            overflow: hidden;
+            border-top: 1px solid rgb(219, 219, 219);
+            text-align: left;
+
+            border-bottom: 1px solid rgb(219, 219, 219);
+
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+            /* font-size: 13px; */
+            z-index: 5;
+            color: black;
+
+            max-height: 3.00mm;
+            height: 3.00mm;
+            overflow: hidden;
+        }
+        
+    </style>
+
+
+    <div class="box" id="box">
+
+
+    </div>
+
+
+
+
+
+
+
+    <script>
+        let stopaga = 1;
+
+        function toYMD(val) {
+            const d = new Date(val);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+
+        let box = document.getElementById("box")
+        let items = {{ ITEMS_JSON }};
+
+
+
+        items.forEach((ite, ind) => {
+
+
+            let newTable = document.createElement('table')
+            box.appendChild(newTable)
+            newTable.innerHTML = `      <tr class="xx">
+                <th class="first">Saat</th>
+
+                <th  >Pazartesi </th>
+                <th>Salı</th>
+                <th>Çarşamba</th>
+                <th>Perşembe</th>
+                <th>Cuma</th>
+            </tr>
+
+            <tbody id="tbody" class="tbody">
+                <tr>
+                    <td class="first">09:10-09:50</td>
+                    <td class="fit-text">
+
+                    </td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+
+                </tr>
+
+                <tr>
+                    <td class="first">10:00-10:40</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+
+                </tr>
+                <tr>
+                    <td class="first">10:50-11:30</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                </tr>
+                <tr>
+                    <td class="first">11:40-12:20</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                </tr>
+                <tr>
+                    <td class="first">13:00-13:40</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                </tr>
+                <tr>
+                    <td class="first">13:50-14:30</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                </tr>
+                <tr>
+                    <td class="first">14:40-15:20</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                </tr>
+                <tr>
+                    <td class="first">15:30-16:10</td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                    <td class="fit-text"></td>
+                </tr>
+            </tbody>`
+
+
+
+            let tbody = document.getElementsByClassName("tbody")[ind]
+            let xx = document.getElementsByClassName("xx")[ind]
+
+            const days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'];
+            const times = [
+                '09:10-09:50', '10:00-10:40', '10:50-11:30', '11:40-12:20',
+                '13:00-13:40',
+                '13:50-14:30', '14:40-15:20', '15:30-16:10'
+            ];
+
+
+
+            function addData(row, column, data) {
+                let tr = tbody.querySelectorAll(":scope > tr")
+                let td = tr[row].querySelectorAll(":scope  td")
+                let html = td[column]
+
+
+                html.innerHTML = `
+                                <span>${data.Ders}</span>
+
+                                <li>${data.kazanim}</li>
+                                <p>${data.yoklar}</p>
+            `
+                let tar = xx.querySelectorAll(":scope > th")
+
+                let sonuc = toYMD(data.tarih)
+                tar[column].innerText = `${data.gun} ${sonuc}`
+
+                let kral = document.getElementsByClassName('first')
+                kral[0].innerHTML = data.Sinif
+
+            }
+
+            ite.forEach(item => {
+
+
+                let satir, sutun;
+
+                // Gün eşleştirmesi
+                days.forEach((element, eleindex) => {
+                    if (item.Gun == element) {
+                        sutun = eleindex;
+                    }
+                });
+
+                // Saat eşleştirmesi
+                times.forEach((ele22, ele22index) => {
+                    if (item.DersSaati == ele22) {
+                        satir = ele22index;
+                    }
+                });
+
+                // Her ikisi de bulunduysa veriyi ekle
+                if (satir !== null && satir !== undefined && sutun !== null && sutun !== undefined) {
+                    if(item.kazanim == null || item.kazanim == undefined || item.kazanim == 'null') item.kazanim = ""
+                    if(stopaga){
+                        document.title = `${item.Sinif} Yoklama Raporu`;
+                        stopaga = 0;
+                    }
+                    addData(satir, sutun + 1, 
+                    { kazanim: item.kazanim, 
+                        yoklar: item.OgrenciNumara,
+                         tarih: item.tarih, 
+                         gun: item.Gun,
+                         Ders:item.Ders, 
+                         Sinif:item.Sinif
+                         }
+                        );
+                    
+                }
+
+
+            });
+
+
+
+
+
+
+        })
+
+
+
+
+        function fitAllLiText() {
+            // Sayfadaki TÜM 'li' elementlerini seç
+            const listItems = document.querySelectorAll('li');
+
+            listItems.forEach(li => {
+                // li boşsa veya içinde sadece boşluk varsa atla
+                if (!li.textContent.trim()) return;
+
+                let fontSize = 12; // Başlangıç font boyutu
+                li.style.fontSize = fontSize + 'px';
+
+                // Metnin yüksekliği, 'li'nin kendi yüksekliğini aştığı sürece
+                while (li.scrollHeight > li.clientHeight && fontSize > 6) {
+                    fontSize--; // Fontu küçült
+                    li.style.fontSize = fontSize + 'px';
+                }
+            });
+        }
+
+        function fitAllLiText2() {
+            // Sayfadaki TÜM 'li' elementlerini seç
+            const listItems = document.querySelectorAll('p');
+
+            listItems.forEach(li => {
+                // li boşsa veya içinde sadece boşluk varsa atla
+                if (!li.textContent.trim()) return;
+
+                let fontSize = 14; // Başlangıç font boyutu
+                li.style.fontSize = fontSize + 'px';
+
+                // Metnin yüksekliği, 'li'nin kendi yüksekliğini aştığı sürece
+                while (li.scrollHeight > li.clientHeight && fontSize > 6) {
+                    fontSize--; // Fontu küçült
+                    li.style.fontSize = fontSize + 'px';
+                }
+            });
+        }
+
+                function fitAllLiText3() {
+            // Sayfadaki TÜM 'li' elementlerini seç
+            const listItems = document.querySelectorAll('span');
+
+            listItems.forEach(li => {
+                // li boşsa veya içinde sadece boşluk varsa atla
+                if (!li.textContent.trim()) return;
+
+                let fontSize = 10; // Başlangıç font boyutu
+                li.style.fontSize = fontSize + 'px';
+
+                // Metnin yüksekliği, 'li'nin kendi yüksekliğini aştığı sürece
+                while (li.scrollHeight > li.clientHeight && fontSize > 6) {
+                    fontSize--; // Fontu küçült
+                    li.style.fontSize = fontSize + 'px';
+                }
+            });
+        }
+
+        // Sayfa yüklendiğinde fonksiyonu çalıştır
+        window.addEventListener('load', () => {
+            fitAllLiText();
+            fitAllLiText2();
+            fitAllLiText3();
+
+
+        });
+    </script>
+
+</body>
+
+</html>
