@@ -8,7 +8,7 @@ const {initFirebase} = require("./src/infrastructure/middleware/fcm_token");
 initFirebase(serviceAccount)
 
 
-const PORT = process.env.PORT || 80
+const PORT = process.env.PORT || 3000
 
 
 connectDB().then(result => {

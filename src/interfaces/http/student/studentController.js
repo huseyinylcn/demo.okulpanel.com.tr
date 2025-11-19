@@ -8,6 +8,8 @@ const pointUseCase = require("./../../../use-cases/student/point")
 const deleteeUseCase = require("./../../../use-cases/student/deletee")
 const filecreateUseCase = require("./../../../use-cases/student/filecreate")
 const mesajgetUseCase = require("./../../../use-cases/student/mesajget")
+const mesajGetV2UseCase = require("./../../../use-cases/student/mesajGetV2")
+
 
 
 
@@ -171,4 +173,15 @@ async function mesajget(req,res) {
     
 }
 
-module.exports = {create,all,classAdd,classAll,homework,attendance,exam,point,deletee,filecreate,mesajget}
+
+async function mesajGetV2(req,res) {
+    try {
+       
+        let result = await mesajGetV2UseCase(req.body,{StudentRepository})
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(400).json({error:error.message})
+    }
+    
+}
+module.exports = {create,all,classAdd,classAll,homework,attendance,exam,point,deletee,filecreate,mesajget,mesajGetV2}

@@ -9,18 +9,28 @@ const attendanceIdareRaporUseCase = require("./../../../use-cases/teacher/attend
 
 
 const homeworkUseCase = require("./../../../use-cases/teacher/homework")
+const homeworkPointAddV2UseCase = require("../../../use-cases/teacher/homeworkPointAddV2")
+
 const homeworkgetUseCase = require("./../../../use-cases/teacher/homeworkget")
 const homeworkdeleteUseCase = require("./../../../use-cases/teacher/homeworkdelete")
 const examUseCase = require("./../../../use-cases/teacher/exam")
 const examgetUseCase = require("./../../../use-cases/teacher/examget")
 const examdeleteUseCase = require("./../../../use-cases/teacher/examdelete")
 const pointUseCase = require("./../../../use-cases/teacher/point")
+
 const pointaddUseCase = require("./../../../use-cases/teacher/pointadd")
+const examPointAddUseCase = require("./../../../use-cases/teacher/examPointAdd")
+
+
+
+
 const deleteeUseCase = require("./../../../use-cases/teacher/deletee")
 const classdeleteeUseCase = require("./../../../use-cases/teacher/classdeletee")
 const attendanceRaporUseCase = require("./../../../use-cases/teacher/attendanceRapor")
 const pointRaporUseCase = require("./../../../use-cases/teacher/pointRapor")
 const mesajgetUseCase = require("./../../../use-cases/teacher/mesajget")
+const mesajGetV2UseCase = require("./../../../use-cases/teacher/mesajGetV2")
+
 const homeworkpointUseCase = require("./../../../use-cases/teacher/homeworkpoint")
 const homeworkpointaddUseCase = require("./../../../use-cases/teacher/homeworkpointadd")
 const studentRaporUseCase = require("./../../../use-cases/teacher/studentRapor")
@@ -325,6 +335,18 @@ async function mesajget(req, res) {
 }
 
 
+async function mesajGetV2(req, res) {
+    try {
+        let result = await mesajGetV2UseCase(req.body, { TeacherRepository })
+        res.status(200).json(result)
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ error: error.message })
+    }
+}
+
+
+
 async function homeworkpoint(req, res) {
     try {
         let result = await homeworkpointUseCase(req.body, { TeacherRepository })
@@ -442,4 +464,40 @@ async function attandanceWarning(req, res) {
 }
 
 
-module.exports = { create,attandanceWarning, allTeacher,attendanceIdareRapor,lessonAssignmentGet,lessonAssignmentDelete,attendanceAddNew, schedule, dersler,mesajget,filecreae, attendance, attendanceadd, homeworkpoint, homeworkpointadd, homework,pointRapor, homeworkget, homeworkdelete, exam, examget, examdelete, point, pointadd, deletee,classdeletee ,attendanceRapor, studentRapor, lessonAssignment}
+async function homeworkPointAddV2(req,res) {
+    try {
+
+        let result = await homeworkPointAddV2UseCase(req.body,{TeacherRepository}) ;
+        
+        res.status(200).json(result)
+        
+    } catch (error) {
+        console.log(error)
+
+        res.status(400).json({error:error.message})
+    }
+    
+}
+
+
+async function examPointAdd(req,res) {
+    try {
+
+        let result = await examPointAddUseCase(req.body,{TeacherRepository}) ;
+        
+        res.status(200).json(result)
+
+
+       
+        
+    } catch (error) {
+        console.log(error)
+
+        res.status(400).json({error:error.message})
+    }
+    
+}
+
+module.exports = { create,attandanceWarning,homeworkPointAddV2,examPointAdd, allTeacher,attendanceIdareRapor,lessonAssignmentGet,lessonAssignmentDelete,
+    attendanceAddNew, schedule, dersler,mesajget,filecreae, attendance, attendanceadd, homeworkpoint, homeworkpointadd, homework,pointRapor, homeworkget, 
+    homeworkdelete, exam, examget, examdelete, point, pointadd, deletee,classdeletee ,attendanceRapor, studentRapor, lessonAssignment, mesajGetV2}

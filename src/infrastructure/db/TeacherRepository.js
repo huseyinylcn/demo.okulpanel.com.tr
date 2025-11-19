@@ -567,7 +567,7 @@ delete from notlar where SinavId = @id
 
   async pointadd(data) {
     try {
-      console.log(data)
+      console.log("repodan gelen",data)
       let result = await new sql.Request()
 
         .input("puan", sql.Int, data.puan)
@@ -749,6 +749,44 @@ ORDER BY
       throw new Error(`SQL GET HATASI ${error.message}`)
     }
   },
+
+  async mesajGetV2(data) {
+    try {
+
+      let result = await new sql.Request()
+
+        .input("id", sql.NVarChar, data.id)
+
+        .query(`
+                    select ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih , o.AdSoyad ,  o.Sinif , o.OgrenciNumara  from mesaj ms
+                    inner join Ogrenciler o on o.OgrenciId = ms.gonderenID
+
+                    where ms.aliciTipi = 'teacher' and ms.AliciID = @id and gonderenTipi = 'student'
+
+                    select ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih  , o.AdSoyad ,  o.Sinif , o.OgrenciNumara 
+
+                    from mesaj ms
+
+                    inner join Ogrenciler o on o.OgrenciId = ms.AliciID
+
+                    where ms.gonderenID = @id and ms.aliciTipi != 'Sinif' and ms.gonderenTipi  = 'teacher'
+
+                    select  ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih , ms.AliciID as AdSoyad , '-' Sinif , '-' OgrenciNumara    from mesaj ms  where ms.aliciTipi = 'Sinif'  and ms.gonderenID = @id
+
+
+
+select  ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih , 'Okul Yönetimi' AdSoyad , '-' Sinif , '-' OgrenciNumara    from mesaj ms 
+where (ms.aliciTipi = 'teacher' or ms.aliciTipi = 'allteacher' ) and ms.gonderenTipi = 'admin' and (ms.AliciID = @id or ms.AliciID = '-')
+                  `)
+
+
+      return result.recordsets
+
+    } catch (error) {
+      throw new Error(`SQL GET HATASI ${error.message}`)
+    }
+  },
+
 
   async mesajget(data) {
     try {

@@ -40,6 +40,6 @@ const sendNotification = async (registrationToken, title, body, data = {}) => {
 
 
 
-// Dışarıya fonksiyonu açıyoruz
+
 module.exports = { sendNotification, initFirebase };
 

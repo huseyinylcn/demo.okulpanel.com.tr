@@ -19,7 +19,7 @@ router.post("/point",jwtService.authenticateToken, studentController.point)
 router.post("/delete",jwtService.authenticateToken, studentController.deletee)
 router.post("/filecre",jwtService.authenticateToken,upload.single("photo"), studentController.filecreate)
 router.post("/mesajget",jwtService.authenticateToken, studentController.mesajget)
-
+router.post("/v2/mesaj/get",jwtService.authenticateToken, studentController.mesajGetV2)
 
 
 

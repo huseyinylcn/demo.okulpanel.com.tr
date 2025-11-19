@@ -313,7 +313,7 @@ async function version(req,res,next) {
      try {
          
        
-          res.status(200).json({version:'1.1.6'})
+          res.status(200).json({version:'1.1.7'})
      } catch (error) {
           res.status(400).json({error:error.message})
      }
@@ -323,4 +323,5 @@ async function version(req,res,next) {
 
 
 
-module.exports = {gainnewget,version,gainRegisteredGet, gainnewdelete, gainnewadd, classGroup, classGroupAdd,classGroupDelete,  create,getteacher,gaindbdelete,scheduleDelete,gaindbadd,gain,gainadd,getclass,dersler,schools,lessonadd,lessondelete, courseStudentAdd,courseStudentget,courseStudentdelete}
+module.exports = {gainnewget,version,gainRegisteredGet, gainnewdelete, gainnewadd, classGroup, classGroupAdd,classGroupDelete, 
+      create,getteacher,gaindbdelete,scheduleDelete,gaindbadd,gain,gainadd,getclass,dersler,schools,lessonadd,lessondelete, courseStudentAdd,courseStudentget,courseStudentdelete}
