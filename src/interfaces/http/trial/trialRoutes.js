@@ -16,6 +16,8 @@ router.post("/response/key",upload.single("xlsx"),jwtService.authenticateToken,t
 router.post("/response/key/get",jwtService.authenticateToken,trialController.responseKeyGet)
 
 router.post("/result/get",jwtService.authenticateToken,trialController.trialResultGet)
+router.post("/result/get/xlsx",jwtService.authenticateToken,trialController.trialResultGetXlsx)
+
 
 
 

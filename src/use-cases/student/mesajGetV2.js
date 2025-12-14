@@ -17,6 +17,9 @@ const gruplanmisMesajlarGelen = result[0].reduce((gruplar, mesaj) => {
         adSoyad: mesaj.AdSoyad,          
         Sinif: mesaj.Sinif,             
         OgrenciNumara: mesaj.OgrenciNumara,
+         permit:1,
+        aliciTipi:"teacher",
+        AliciID: String(mesaj.gonderenID) 
    
     };
     
@@ -75,7 +78,7 @@ const gruplanmisMesajlarSinif = result[2].reduce((gruplar, mesaj) => {
         OgrenciNumara: mesaj.OgrenciNumara,
         permit:0,
         aliciTipi:"Sinif",
-        AliciID: String(mesaj.AliciID) 
+        AliciID: String(mesaj.gonderenID) 
     };
     
     if (!gruplar[id]) {
@@ -221,7 +224,7 @@ function tumMesajlariGuncelle(veriDizisi) {
 
         const enYeniMesaj = siraliMesajlar[0];
         
-        const ilk15Karakter = enYeniMesaj.mesaj.substring(0, 15);
+        const ilk15Karakter = enYeniMesaj.mesaj.substring(0, 30)
         
         return {
             ...konusma, 

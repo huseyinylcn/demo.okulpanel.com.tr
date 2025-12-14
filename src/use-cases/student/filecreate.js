@@ -2,70 +2,107 @@
 const xlsx = require("xlsx")
 let studentEnity = require("./../../domain/student/studentEnity")
 
+const dayjs = require('dayjs');
 
+
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+
+dayjs.extend(customParseFormat);
 
 function excelDateToString(value) {
-  // Eğer sayıysa (Excel seri numarası)
-  if (!isNaN(value)) {
-    const excelEpoch = new Date(1899, 11, 30); // Excel 0 günü (1900-01-00 gibi)
-    const date = new Date(excelEpoch.getTime() + value * 86400000);
-    return date.toISOString().split("T")[0]; // yyyy-mm-dd formatı
-  }
 
-  // Eğer string ise (zaten tarih formatında gelmişse)
-  const date = new Date(value);
-  if (!isNaN(date)) {
-    return date.toISOString().split("T")[0];
-  }
+    if (typeof value === 'number' && !isNaN(value)) {
 
-return '1900-01-01'
+        const date = new Date(1899, 11, 30 + value);
+        if (!isNaN(date.getTime())) {
+            return date.toISOString().split("T")[0];
+        }
+    }
+
+    if (typeof value === 'string') {
+      
+        const date = dayjs(value); 
+
+        if (date.isValid()) {
+            return date.format('YYYY-MM-DD'); 
+        }
+    }
+    
+    // 3. Hata
+    return '1900-01-01';
 }
 
+async function filecreate(data, { StudentRepository, financeRepository,financeCreate,helperFunc }) {
+  let kayiterror = []
 
-async function filecreate(data, { StudentRepository }) {
-    let kayiterror = []
+  const dosya = xlsx.readFile(`./uploads/${data.filename}`)
 
-    const dosya = xlsx.readFile(`./uploads/${data.filename}`)
+  let sayfaAdi = dosya.SheetNames[0]
+  let sayfa = dosya.Sheets[sayfaAdi]
 
-    let sayfaAdi = dosya.SheetNames[0]
-    let sayfa = dosya.Sheets[sayfaAdi]
-
-    let veri = xlsx.utils.sheet_to_json(sayfa, { defval: null });
+  let veri = xlsx.utils.sheet_to_json(sayfa, { defval: null });
 
 
-for (const element of veri) {
+  for (const element of veri) {
     const yapi = {
-        Sinif: element["Sınıf *"],
-        OgrenciNumara: String(element["Numara *"]),
-        BabaAdSoyad: element["Baba Adı soyadı *"],
-        AdSoyad: element["İsim Soyisim *"],
-        AnneAdSoyad: element["Anne Adı Soyadı *"],
-        TCKimlikNo: String(element["TC *"]),
-        Cinsiyet: element["Cinsiyeti"] === "Erkek" ? 1 : 0,
-        DogumTarihi:String(element["Doğum Tarihi"]),
-        AnneEgitim: element["Anne Eğitim "],
-        BabaEgitim: element["Baba Eğitim"],
-        AnneMeslek: element["Anne Meslek"],
-        BabaMeslek: element["Baba Meslek"],
-        SuregenRahatsizlik: String(element["Süreğen rahatsızlık"]),
-        AylikGelir: String(element["Aylık gelir"]),
-        AnneTel: String(element["Anne Tel"]),
-        BabaTel: String(element["Baba Tel"]),
-        Engel: element["Engel"]  === "Var" ? 1 : 0,
-        VeliDurum: element["Ber/Ayrı"]  === "Beraber" ? 1 : 0,
-        Sag: String(element["Sağ"]),
-        photo: "default.png"
+      Sinif: element["Sınıf *"],
+      OgrenciNumara: String(element["Numara *"]),
+      AdSoyad: element["İsim Soyisim *"],
+      TCKimlikNo: String(element["TC *"]),
+
+      DogumTarihi: String(element["Doğum Tarihi *"]),
+      AnneAdSoyad: element["Anne Adı Soyadı"],
+      BabaAdSoyad: element["Baba Adı soyadı"],
+
+      Sag: String(element["Sağ"]),
+      AnneEgitim: element["Anne Eğitim "],
+      BabaEgitim: element["Baba Eğitim"],
+      AnneMeslek: element["Anne Meslek"],
+      BabaMeslek: element["Baba Meslek"],
+      SuregenRahatsizlik: String(element["Süreğen rahatsızlık"]),
+      AylikGelir: String(element["Aylık gelir"]),
+      AnneTel: String(element["Anne Tel"]),
+      BabaTel: String(element["Baba Tel"]),
+
+
+      photo: "default.png"
     };
 
-    
-    try {
-        yapi.DogumTarihi =  excelDateToString(element["Doğum Tarihi"])
-        let res = await new studentEnity(yapi);
-        let xx = await StudentRepository.studentCreate(res);
-    } catch (error) {
-        kayiterror.push({ isim: yapi.AdSoyad, OgrenciNumara: yapi.OgrenciNumara,HATA:error.message });
+    if (element["Cinsiyeti"] == "Erkek") {
+      yapi.Cinsiyet = 1
+    } else if (element["Cinsiyeti"] == "Kadın") {
+      yapi.Cinsiyet = 0
+    } else {
+      yapi.Cinsiyet = null
     }
-}
+
+    if (element["Ber/Ayrı"] == "Beraber") {
+      yapi.VeliDurum = 1
+    } else if (element["Ber/Ayrı"] == "Ayrı") {
+      yapi.VeliDurum = 0
+    } else {
+      yapi.VeliDurum = null
+    }
+
+    if (element["Engel"] == "Var") {
+      yapi.Engel = 1
+    } else if (element["Engel"] == "Yok") {
+      yapi.Engel = 0
+    } else {
+      yapi.Engel = null
+    }
+
+
+    try {
+        yapi.DogumTarihi = excelDateToString(element["Doğum Tarihi"])
+
+        let res = await new studentEnity(yapi);
+        let studentCreateResult = await StudentRepository.studentCreate(res);
+    } catch (error) {
+      console.log(error)
+      kayiterror.push(yapi);
+    }
+  }
 
 
 
@@ -73,7 +110,7 @@ for (const element of veri) {
 
 
 
-    return kayiterror
+  return kayiterror
 
 }
 

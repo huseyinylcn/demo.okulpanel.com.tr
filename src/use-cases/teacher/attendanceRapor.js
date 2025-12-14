@@ -25,7 +25,7 @@ async function pdfCR(dataa) {
     //  console.log(dataa)
     const browser = await puppeteer.launch({
       headless: true,
-
+      // executablePath: "C:\\puppeteer\\chrome\\win64-140.0.7339.207\\chrome-win64\\chrome.exe", 
       executablePath: "C:\\puppeteer-cache\\chrome\\win64-140.0.7339.207\\chrome-win64\\chrome.exe", 
       args: ['--no-sandbox']
     });

@@ -5,6 +5,9 @@ const responseKeyUseCase = require("./../../../use-cases/trial/responseKey")
 const responseKeyGetUseCase = require("./../../../use-cases/trial/responseKeyGet")
 const trialGetUseCase = require("./../../../use-cases/trial/trialGet")
 const trialResultGetUseCase = require("./../../../use-cases/trial/trialResultGet")
+const trialResultGetXlsxUseCase = require("./../../../use-cases/trial/trialResultGetXlsx")
+
+
 const trialPublicUseCase = require("./../../../use-cases/trial/trialPublic")
 const trialDeleteUseCase = require("./../../../use-cases/trial/trialDelete")
 const studentTrialGetUseCase = require("./../../../use-cases/trial/studentTrialGet")
@@ -139,6 +142,25 @@ async function trialResultGet(req, res) {
 }
 
 
+async function trialResultGetXlsx(req, res) {
+    try {
+
+
+        let result = await trialResultGetXlsxUseCase(req.body, { trialRepository,trialResultGetUseCase })
+
+
+         res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="ogrenci_sonuclari.csv"');
+        res.status(200).send(result);
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+    }
+}
+
+
 async function trialPublic(req, res) {
     try {
 
@@ -243,4 +265,4 @@ async function statisticsClassWeb(req, res) {
     }
 }
 
-module.exports = { schemaAdd,statisticsClassWeb, schemaGet,statisticsGain, schemaRead,responseKey,responseKeyGet,trialReadAdd,trialGet,trialResultGet,trialPublic,trialDelete,studentTrialGet, studentTrialGetOne,statisticsClass,statisticsSelectTrial }
+module.exports = { schemaAdd,statisticsClassWeb,trialResultGetXlsx, schemaGet,statisticsGain, schemaRead,responseKey,responseKeyGet,trialReadAdd,trialGet,trialResultGet,trialPublic,trialDelete,studentTrialGet, studentTrialGetOne,statisticsClass,statisticsSelectTrial }

@@ -9,9 +9,12 @@ const createAdmin = require("./../../../use-cases/users/create")
 const infoUser = require("./../../../use-cases/users/info")
 const tokenUseCase = require("./../../../use-cases/users/token")
 const mesajUseCase = require("./../../../use-cases/users/mesaj")
+
 const { sendNotification } = require("./../../../infrastructure/middleware/fcm_token");
 
 let mesajgetUseCase = require("./../../../use-cases/users/mesajget")
+let mesajGetV2UseCase = require("./../../../use-cases/users/mesajGetV2")
+
 let birthdateCelebrateUseCase = require("./../../../use-cases/users/birthdateCelebrate")
 
 let maininfoUseCase = require("./../../../use-cases/users/maininfo")
@@ -76,6 +79,19 @@ async function token(req,res) {
 
 async function mesaj(req,res) {
     try {
+
+        req.body.gonderenID = Number(req.user.id)
+
+        if(req.user.rol == "2")   req.body.gonderenTipi = "teacher"
+        if(req.user.rol == "3")   req.body.gonderenTipi = "student"
+        if(req.user.rol == "1")  {
+                 req.body.gonderenTipi = "admin"
+                 req.body.gonderenID = 0
+
+        }
+        console.log(req.body)
+      
+
         let result = await mesajUseCase(req.body,{userRepository,sendNotification})
         res.status(200).json(result)
     } catch (error) {
@@ -94,6 +110,22 @@ async function mesajget(req,res) {
         res.status(400).json({error:error.message})
     }
 }
+
+
+async function mesajGetV2(req,res) {
+    try {
+
+   
+
+
+        let result = await mesajGetV2UseCase(req.body,{userRepository})
+        res.status(200).json(result)
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({error:error.message})
+    }
+}
+
 
 
 async function maininfo(req,res) {
@@ -267,4 +299,4 @@ async function birthdateCelebrate(req,res) {
 
 
 
-module.exports = {login, passwordUpdateAdmin, birthdateCelebrate, create,info,token,mesaj,mesajget,maininfo,passwordUpdate,tokendelete,passwordForget,passwordForgetCodeVerify,passwordUpdate2,passwordForgetST, passwordForgetCodeVerifyST, passwordUpdate3}
+module.exports = {login, passwordUpdateAdmin, birthdateCelebrate,mesajGetV2, create,info,token,mesaj,mesajget,maininfo,passwordUpdate,tokendelete,passwordForget,passwordForgetCodeVerify,passwordUpdate2,passwordForgetST, passwordForgetCodeVerifyST, passwordUpdate3}

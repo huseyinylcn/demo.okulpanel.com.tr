@@ -66,7 +66,7 @@ const userRepository = {
                 .query(`
                 SELECT 
  *
-  FROM [demo].[dbo].[Yoneticiler] where AdminID = @id
+  FROM [dbo].[Yoneticiler] where AdminID = @id
                 `)
             return result
         } catch (error) {
@@ -80,7 +80,7 @@ const userRepository = {
                 .input("id", sql.NVarChar, data.id)
                 .query(`
                SELECT *
-  FROM [demo].[dbo].[Ogrenciler] where OgrenciId = @id
+  FROM [dbo].[Ogrenciler] where OgrenciId = @id
 
                 `)
             return result
@@ -108,7 +108,7 @@ const userRepository = {
       ,[Bolum]
       ,[Fotograf]
       ,[OgretmenID]
-  FROM [demo].[dbo].[Ogretmenler] where OgretmenID = @id
+  FROM [dbo].[Ogretmenler] where OgretmenID = @id
                 `)
             return result
         } catch (error) {
@@ -204,8 +204,8 @@ const userRepository = {
                 .query(`
                     
                     SELECT o.AdSoyad, o.Sinif, o.OgrenciNumara, tk.*
-                    FROM [demo].[dbo].[FCM_TOKEN] tk
-                    left join [demo].[dbo].[Ogrenciler] o on o.OgrenciId = @gonderenID
+                    FROM [dbo].[FCM_TOKEN] tk
+                    left join [dbo].[Ogrenciler] o on o.OgrenciId = @gonderenID
                     where tk.[user_type] = @aliciTipi and tk.[user_id] = @AliciID
 
 
@@ -235,8 +235,8 @@ const userRepository = {
                 .query(`
                     
                 SELECT o.AdSoyad, tk.*
-                FROM [demo].[dbo].[FCM_TOKEN] tk
-                left join [demo].[dbo].[Ogretmenler] o on o.OgretmenID = @gonderenID
+                FROM [dbo].[FCM_TOKEN] tk
+                left join [dbo].[Ogretmenler] o on o.OgretmenID = @gonderenID
                 where tk.[user_type] = @aliciTipi and tk.[user_id] = @AliciID
 
 
@@ -263,10 +263,10 @@ const userRepository = {
 
                 .query(`
                 SELECT  tk.*,og.AdSoyad 
-                FROM [demo].[dbo].[FCM_TOKEN] tk
-                inner join [demo].[dbo].[Ogretmenler] og on og.OgretmenID = @gonderenID
+                FROM [dbo].[FCM_TOKEN] tk
+                inner join [dbo].[Ogretmenler] og on og.OgretmenID = @gonderenID
 
-                left join [demo].[dbo].[Ogrenciler] o on o.Sinif = @AliciID
+                left join [dbo].[Ogrenciler] o on o.Sinif = @AliciID
                 where tk.[user_type] = 'student' and tk.[user_id] = o.OgrenciId
 
 
@@ -298,7 +298,7 @@ const userRepository = {
 
                 .query(`
                     SELECT  tk.*
-                    FROM [demo].[dbo].[FCM_TOKEN] tk
+                    FROM [dbo].[FCM_TOKEN] tk
                     where tk.[user_type] = 'teacher' 
                     `)
             return result.recordset
@@ -327,7 +327,7 @@ const userRepository = {
 
                 .query(`
                     SELECT  tk.*
-                    FROM [demo].[dbo].[FCM_TOKEN] tk
+                    FROM [dbo].[FCM_TOKEN] tk
                     where tk.[user_type] = 'student' 
                     `)
             return result.recordset
@@ -352,8 +352,8 @@ const userRepository = {
                 .query(`
                    
                     SELECT  tk.*
-                    FROM [demo].[dbo].[FCM_TOKEN] tk
-                    left join [demo].[dbo].[Ogrenciler] o on o.Sinif = @AliciID
+                    FROM [dbo].[FCM_TOKEN] tk
+                    left join [dbo].[Ogrenciler] o on o.Sinif = @AliciID
                     where tk.[user_type] = 'student' and tk.[user_id] = o.OgrenciId
 
                     `)
@@ -383,8 +383,8 @@ const userRepository = {
                 .query(`
                    
                    SELECT  tk.*, o.OgrenciNumara, o.AdSoyad,o.Sinif
-                    FROM [demo].[dbo].[FCM_TOKEN] tk
-                    left join [demo].[dbo].[Ogrenciler] o on o.OgrenciId = @gonderenID
+                    FROM [dbo].[FCM_TOKEN] tk
+                    left join [dbo].[Ogrenciler] o on o.OgrenciId = @gonderenID
                     where tk.[user_type] = 'admin' 
 
 
@@ -427,12 +427,12 @@ const userRepository = {
                         WHEN ms.gonderenTipi = 'student'   THEN o.OgrenciNumara
                     END AS OgrenciNumara
 
-                FROM [demo].[dbo].[mesaj] ms
+                FROM [dbo].[mesaj] ms
 
 
-                left join [demo].[dbo].[Ogretmenler] og on ms.gonderenTipi = 'teacher' and ms.gonderenID = og.OgretmenID
+                left join [dbo].[Ogretmenler] og on ms.gonderenTipi = 'teacher' and ms.gonderenID = og.OgretmenID
 
-                left join [demo].[dbo].[Ogrenciler] o on ms.gonderenTipi = 'student' and ms.gonderenID = o.OgrenciId
+                left join [dbo].[Ogrenciler] o on ms.gonderenTipi = 'student' and ms.gonderenID = o.OgrenciId
 
 
                     where ms.aliciTipi = 'admin' 
@@ -445,6 +445,93 @@ const userRepository = {
         }
     },
 
+    async mesajGetV2(data) {
+
+        try {
+            let result = await new sql.Request()
+
+
+
+
+                .query(`
+  select ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih , o.AdSoyad ,  o.Sinif , o.OgrenciNumara  from mesaj ms
+                    inner join Ogrenciler o on o.OgrenciId = ms.gonderenID
+
+                    where ms.aliciTipi = 'admin' and ms.AliciID = '0' and gonderenTipi = 'student'
+
+
+
+
+
+
+select ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih  , o.AdSoyad ,  o.Sinif , o.OgrenciNumara 
+
+                    from mesaj ms
+
+                    inner join Ogrenciler o on o.OgrenciId = ms.AliciID
+
+                    where ms.gonderenID = 0 and ms.aliciTipi = 'student'  and ms.gonderenTipi  = 'admin'
+
+
+
+
+
+select  ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih ,  o.AdSoyad,
+
+
+'-' AS Sinif , 
+'-' AS OgrenciNumara  from mesaj ms 
+
+INNER JOIN dbo.Ogretmenler o ON o.OgretmenID = ms.AliciID
+
+WHERE ms.aliciTipi = 'teacher'  and ms.gonderenID = 0
+
+
+
+select  ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih , 
+
+ ms.AliciID AS AdSoyad ,
+'-' AS Sinif , 
+'-' AS OgrenciNumara    from mesaj ms 
+
+WHERE ms.aliciTipi = 'Sinif'  and ms.gonderenID = 0
+
+
+
+select  ms.mesaj, ms.gonderenID, ms.AliciID, ms.tarih ,
+
+'-' AS AdSoyad ,
+'-' AS Sinif , 
+'-' AS OgrenciNumara     from mesaj ms 
+
+WHERE ms.aliciTipi = 'allteacher'  and ms.gonderenID = 0
+
+
+
+
+select  ms.mesaj,
+ms.gonderenID,
+ms.AliciID,
+ms.tarih ,
+
+'-' AS AdSoyad ,
+'-' AS Sinif , 
+'-' AS OgrenciNumara 
+
+FROM mesaj ms 
+
+WHERE ms.aliciTipi = 'allstudent'  and ms.gonderenID = 0
+
+                    `)
+            return result.recordsets
+        } catch (error) {
+            console.log(error)
+            throw new Error(error.message)
+        }
+    },
+
+
+
 
     async maininfo(data) {
 
@@ -452,51 +539,50 @@ const userRepository = {
             let result = await new sql.Request()
                 .query(`
                   
-                        WITH SinavOrtalama AS (
+ WITH SinavOrtalama AS (
                             SELECT 
                                 s.Ders,
                                 s.Sinif,
                                 n.SinavId,
                                 AVG(TRY_CAST(n.puan AS FLOAT)) AS sinav_ortalama,
                                 (SELECT AVG(TRY_CAST(nn.puan AS FLOAT)) 
-                                FROM [demo].[dbo].[notlar] nn) AS genel_ortalama
-                            FROM [demo].[dbo].[notlar] n
-                            LEFT JOIN [demo].[dbo].[sinavlar] s 
+                                FROM [dbo].[notlar] nn) AS genel_ortalama
+                            FROM [dbo].[notlar] n
+                            LEFT JOIN [dbo].[sinavlar] s 
                                 ON s.id = n.SinavId
                             GROUP BY s.Ders, s.Sinif, n.SinavId
                         ),
                         YoklamaIstatistik AS (
                            SELECT
-    -- Bugün gelmeyen benzersiz öğrenci sayısı
-    (SELECT COUNT(DISTINCT y.OgrenciID)
-     FROM [demo].[dbo].[yoklama] y
-     WHERE CAST(y.tarih AS DATE) = CAST(GETDATE() AS DATE)
-       AND y.durum = 0) AS gunluk_gelmeyenler,
 
-    -- Son bir ay içindeki toplam devamsızlık yapılan "öğrenci-gün" sayısı
+
+	   (SELECT COUNT(DISTINCT y.OgrenciID)
+ FROM [dbo].[yoklama] y
+ WHERE CAST(y.tarih AS DATE) = CAST(GETDATE() AS DATE)
+   AND y.durum = 0) AS gunluk_gelmeyenler,
+
     (SELECT COUNT(*) FROM (
         SELECT DISTINCT y.OgrenciID, CAST(y.tarih AS DATE) AS DevamsizlikGunu -- <-- DÜZELTME BURADA
-        FROM [demo].[dbo].[yoklama] y
+        FROM [dbo].[yoklama] y
         WHERE y.tarih BETWEEN DATEADD(MONTH, -1, GETDATE()) AND GETDATE()
           AND y.durum = 0
      ) AS aylik_devamsizlik_gun_sayisi) AS aylik_gelmeyenler,
 
     -- Toplam öğrenci sayısı
     (SELECT COUNT(*)
-     FROM [demo].[dbo].[Ogrenciler]) AS toplam_ogrenci
+     FROM [dbo].[Ogrenciler]) AS toplam_ogrenci
                         )
-                        SELECT 
+                        SELECT TOP 5
                             s.Ders,
                             s.Sinif,
                             s.SinavId,
-                            s.sinav_ortalama,
-                            s.genel_ortalama,
+                           ROUND(s.sinav_ortalama, 2) AS sinav_ortalama, 
+							ROUND(s.genel_ortalama, 2) AS genel_ortalama,
                             y.gunluk_gelmeyenler,
                             y.aylik_gelmeyenler,
                             y.toplam_ogrenci
                         FROM SinavOrtalama s
                         CROSS JOIN YoklamaIstatistik y;
-
 
                     `)
             return result.recordset
@@ -516,7 +602,8 @@ const userRepository = {
                 .query(`
             UPDATE users
             SET 
-                [password] = @password
+                [password] = @password,
+                [change] = GETDATE()
             WHERE id = @id and rol = @rol;
             `)
 
@@ -533,7 +620,7 @@ const userRepository = {
 
                 .query(`
            delete
-  FROM [demo].[dbo].[FCM_TOKEN] where fcm_token = @token
+  FROM [dbo].[FCM_TOKEN] where fcm_token = @token
 
             `)
 
@@ -582,7 +669,8 @@ const userRepository = {
                 .query(`
             UPDATE users
             SET 
-                [password] = @password
+                [password] = @password,
+                [change] = GETDATE();
             WHERE username = @username and rol = 2;
             `)
             return true
@@ -643,7 +731,8 @@ WHERE OgrenciNumara = @no;
                 .query(`
             UPDATE users
         SET 
-        [password] = @password
+        [password] = @password,
+        [change] = GETDATE()
             WHERE username = @username and rol = 3;
             `)
             return true
@@ -666,20 +755,21 @@ WHERE OgrenciNumara = @no;
 
                 .query(`
 
-                  UPDATE users
-SET 
-    [password] = @password,
-    [username] = @username
-WHERE 
-    id =  @id AND rol = @rol
-    AND NOT EXISTS (
-       
-        SELECT 1 
-        FROM users 
-        WHERE username = @username AND id != @id
-    );
+                                UPDATE users
+                SET 
+                    [password] = @password,
+                    [username] = @username,
+                    [change] = GETDATE()
+                WHERE 
+                    id =  @id AND rol = @rol
+                    AND NOT EXISTS (
+                    
+                        SELECT 1 
+                        FROM users 
+                        WHERE username = @username AND id != @id
+                    );
 
-SELECT CASE WHEN @@ROWCOUNT > 0 THEN 1 ELSE 0 END AS sonuc;
+                SELECT CASE WHEN @@ROWCOUNT > 0 THEN 1 ELSE 0 END AS sonuc;
           
                         `)
             return result.recordset[0]
@@ -690,7 +780,7 @@ SELECT CASE WHEN @@ROWCOUNT > 0 THEN 1 ELSE 0 END AS sonuc;
     },
 
 
-     async birthdateCelebrate(data) {
+    async birthdateCelebrate(data) {
         try {
             let result = await new sql.Request()
                 .query(`
@@ -707,6 +797,27 @@ SELECT CASE WHEN @@ROWCOUNT > 0 THEN 1 ELSE 0 END AS sonuc;
                         inner join FCM_TOKEN fc on fc.user_type = 'teacher' and fc.[user_id] = o.OgretmenID
                         WHERE MONTH(o.DogumTarihi) = MONTH(GETDATE())
                         AND DAY(o.DogumTarihi) = DAY(GETDATE());
+
+          
+                        `)
+            return result.recordset
+
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    },
+
+      async passwordChangeDateGet(data) {
+        try {
+            let result = await new sql.Request()
+
+
+            .input("rol", sql.NVarChar, data.rol)
+            .input("id", sql.NVarChar, data.id)
+            
+
+                .query(`
+                       SELECT [change] FROM users where rol = @rol and id = @id
 
           
                         `)

@@ -9,6 +9,14 @@ const deleteeUseCase = require("./../../../use-cases/student/deletee")
 const filecreateUseCase = require("./../../../use-cases/student/filecreate")
 const mesajgetUseCase = require("./../../../use-cases/student/mesajget")
 const mesajGetV2UseCase = require("./../../../use-cases/student/mesajGetV2")
+const reklamUseCase = require("./../../../use-cases/student/reklam")
+
+
+const financeCreate = require("./../../../use-cases/finance/create")
+
+const financeRepository = require("./../../../infrastructure/db/financeRepository")
+
+
 
 
 
@@ -22,22 +30,23 @@ const classGet = require("./../../../use-cases/student/classGet")
 
 
 const StudentRepository = require("../../../infrastructure/db/StudentRepository")
+const helperFunc = require("../../../utils/helperFunc")
 
 
 
-async function create(req,res) {
+async function create(req, res) {
     try {
-        
 
-        if(req.file != undefined) req.body.photo = req.file.filename
+
+        if (req.file != undefined) req.body.photo = req.file.filename
         else req.body.photo = "default.png"
 
-       
-        
 
-        
-       let result = await StudentCreate(req.body,{StudentRepository})
-       res.status(201).json(result)
+
+
+
+        let result = await StudentCreate(req.body, { StudentRepository })
+        res.status(201).json(result)
 
 
 
@@ -45,143 +54,161 @@ async function create(req,res) {
 
 
 
-       
 
 
- console.log(error.message)
-        if((error.message).includes("UNIQUE KEY")) res.status(401).json({error:"Bu Öğrenci Numarası zaten var."})
-        else res.status(400).json({error:error.message})
+
+        console.log(error.message)
+        if ((error.message).includes("UNIQUE KEY")) res.status(401).json({ error: "Bu Öğrenci Numarası zaten var." })
+        else res.status(400).json({ error: error.message })
     }
 }
 
 
 
-async function all(req,res) {
+async function all(req, res) {
     try {
 
-        let result = await allGet({StudentRepository})
+        let result = await allGet({ StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
-        
+        res.status(400).json({ error: error.message })
+
     }
 }
 
 
-async function classAll(req,res) {
+async function classAll(req, res) {
     try {
-        let result = await classGet({StudentRepository})
-   
+        let result = await classGet({ StudentRepository })
+
         res.status(200).json(result)
 
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
 
-async function classAdd(req,res) {
+async function classAdd(req, res) {
     try {
-        let result = await classAddUseCase(req.body,{StudentRepository})
+        let result = await classAddUseCase(req.body, { StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
 
 
-async function homework(req,res) {
+async function homework(req, res) {
     try {
         console.log(req.body)
-        let result = await homeworkUseCase(req.body,{StudentRepository})
+        let result = await homeworkUseCase(req.body, { StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
 
 
-async function attendance(req,res) {
+async function attendance(req, res) {
     try {
         console.log(req.body)
-        let result = await attendanceUseCase(req.body,{StudentRepository})
+        let result = await attendanceUseCase(req.body, { StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
 
-async function exam(req,res) {
+async function exam(req, res) {
     try {
-       
-        let result = await examUseCase(req.body,{StudentRepository})
+
+        let result = await examUseCase(req.body, { StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
-}
 
-
-async function point(req,res) {
-    try {
-       
-        let result = await pointUseCase(req.body,{StudentRepository})
-        res.status(200).json(result)
-    } catch (error) {
-        res.status(400).json({error:error.message})
-    }
-    
-}
-
-async function deletee(req,res) {
-    try {
-       
-        let result = await deleteeUseCase(req.body,{StudentRepository})
-        res.status(200).json(result)
-    } catch (error) {
-        res.status(400).json({error:error.message})
-    }
-    
 }
 
 
-async function filecreate(req,res) {
+async function point(req, res) {
     try {
 
-        if(req.file != undefined) req.body.filename = req.file.filename
-        else  res.status(400).json(false)
-     let result = await filecreateUseCase(req.body,{StudentRepository})
+        let result = await pointUseCase(req.body, { StudentRepository })
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+
+}
+
+async function deletee(req, res) {
+    try {
+
+        let result = await deleteeUseCase(req.body, { StudentRepository })
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+
+}
+
+
+async function filecreate(req, res) {
+    try {
+
+        if (req.file != undefined) req.body.filename = req.file.filename
+        else res.status(400).json(false)
+
+        let result = await filecreateUseCase(req.body, { StudentRepository, financeRepository,financeCreate,helperFunc })
+
         res.status(200).json(result)
     } catch (error) {
         console.log(error)
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
-async function mesajget(req,res) {
+async function mesajget(req, res) {
     try {
-       
-        let result = await mesajgetUseCase(req.body,{StudentRepository})
+
+        let result = await mesajgetUseCase(req.body, { StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
 
 
-async function mesajGetV2(req,res) {
+async function mesajGetV2(req, res) {
     try {
-       
-        let result = await mesajGetV2UseCase(req.body,{StudentRepository})
+        req.body.id = req.user.id
+
+        let result = await mesajGetV2UseCase(req.body, { StudentRepository })
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
     }
-    
+
 }
-module.exports = {create,all,classAdd,classAll,homework,attendance,exam,point,deletee,filecreate,mesajget,mesajGetV2}
+
+
+async function reklam(req, res) {
+    try {
+    
+        let result = await reklamUseCase(req.body, { StudentRepository })
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+
+}
+
+
+
+module.exports = { create, all, classAdd, classAll, homework, attendance, exam, point, deletee, filecreate, mesajget, mesajGetV2,reklam }

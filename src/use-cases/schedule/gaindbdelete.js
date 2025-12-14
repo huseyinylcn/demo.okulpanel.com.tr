@@ -1,7 +1,5 @@
 async function gaindbdelete(data,{scheduleRepository}) {
-    // let result = await scheduleRepository.gaindbdelete(data)
-    let result = true
-
+    let result = await scheduleRepository.gaindbdelete(data)
     return result
     
 }

@@ -12,7 +12,7 @@ let trialRepository = {
                 .input("id", sql.Int, data.id)
                 .query(`
                 SELECT *
-                FROM [demo].[dbo].[trialSchema] where id = @id
+                FROM [dbo].[trialSchema] where id = @id
                 `)
 
             return result.recordset[0]
@@ -26,7 +26,7 @@ let trialRepository = {
             let result = await new sql.Request()
                 .query(`
                 SELECT name, id
-                FROM [demo].[dbo].[trialSchema]
+                FROM [dbo].[trialSchema]
                 `)
 
             return result.recordset
@@ -152,6 +152,11 @@ let trialRepository = {
             throw new Error("SQL GET HATASI!!!")
         }
     },
+
+
+
+
+
     async trialRead(data, cvpname) {
         try {
 
@@ -210,6 +215,22 @@ let trialRepository = {
             throw new Error("SQL OKUMA HATASI")
         }
     },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     async trialReadAdd(data) {
         try {
@@ -326,7 +347,7 @@ let trialRepository = {
             let result = await new sql.Request()
 
                 .query(`
-                    select * from trials order by [date] 
+                    select * from trials order by [date] desc
                 `)
 
             return result.recordset
@@ -357,7 +378,7 @@ let trialRepository = {
                         from trialResponse 
 
                         where id = @id
-) select *, (turkceNet+ sosyalNet + dinNet + ingilizceNet + matematikNet+ fenNet) as toplamNet from sonuc order by puan DESC
+) select *, (turkceNet+ sosyalNet + dinNet + ingilizceNet + matematikNet+ fenNet) as toplamNet from sonuc order by toplamNet DESC
                 `)
 
             return result.recordset

@@ -39,6 +39,8 @@ const lessonAssignmentUseCase = require("./../../../use-cases/teacher/lessonAssi
 const lessonAssignmentGetUseCase = require("./../../../use-cases/teacher/lessonAssignmentGet")
 const lessonAssignmentDeleteUseCase = require("./../../../use-cases/teacher/lessonAssignmentDelete")
 const attandanceWarningUseCase = require("./../../../use-cases/teacher/attandanceWarning")
+const examHomeworkTrialReportUseCase = require("./../../../use-cases/teacher/examHomeworkTrialReport")
+
 
 
 
@@ -337,7 +339,11 @@ async function mesajget(req, res) {
 
 async function mesajGetV2(req, res) {
     try {
+      
+        req.body.id = req.user.id
         let result = await mesajGetV2UseCase(req.body, { TeacherRepository })
+
+
         res.status(200).json(result)
     } catch (error) {
         console.log(error)
@@ -498,6 +504,35 @@ async function examPointAdd(req,res) {
     
 }
 
+
+async function examHomeworkTrialReport(req,res) {
+    try {
+
+        let pdfBuffer = await examHomeworkTrialReportUseCase(req.body, { TeacherRepository });
+        
+        // 1. Tarayıcıya bunun bir PDF olduğunu söyle
+        res.setHeader('Content-Type', 'application/pdf');
+
+        // 2. Dosya ismini ve davranışını belirle
+        // 'attachment': Dosyayı direkt indirir.
+        // 'inline': Dosyayı tarayıcıda açar (önizleme).
+        // Genelde raporlar için 'attachment' tercih edilir.
+        res.setHeader('Content-Disposition', 'attachment; filename=Ogrenci_Raporu.pdf');
+
+        // 3. Dosya boyutunu bildir (Opsiyonel ama iyi bir pratiktir, loading bar için)
+        res.setHeader('Content-Length', pdfBuffer.length);
+
+        // 4. Veriyi gönder (json DEĞİL, send kullanıyoruz)
+        res.send(pdfBuffer);
+        
+    } catch (error) {
+        console.log(error)
+
+        res.status(400).json({error:error.message})
+    }
+    
+}
+
 module.exports = { create,attandanceWarning,homeworkPointAddV2,examPointAdd, allTeacher,attendanceIdareRapor,lessonAssignmentGet,lessonAssignmentDelete,
     attendanceAddNew, schedule, dersler,mesajget,filecreae, attendance, attendanceadd, homeworkpoint, homeworkpointadd, homework,pointRapor, homeworkget, 
-    homeworkdelete, exam, examget, examdelete, point, pointadd, deletee,classdeletee ,attendanceRapor, studentRapor, lessonAssignment, mesajGetV2}
+    homeworkdelete, exam, examget, examdelete, point, pointadd, deletee,classdeletee ,attendanceRapor, studentRapor, lessonAssignment, mesajGetV2,examHomeworkTrialReport}

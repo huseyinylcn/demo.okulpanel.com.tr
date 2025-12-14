@@ -70,7 +70,7 @@ SELECT
     CASE 
         WHEN EXISTS (
             SELECT 1 
-            FROM [demo].[dbo].[yoklama] y
+            FROM [dbo].[yoklama] y
             WHERE y.ProgramID = dp.ProgramID
             AND y.tarih = @tarih
         )
@@ -78,7 +78,7 @@ SELECT
             CASE 
                 WHEN EXISTS (
                     SELECT 1
-                    FROM [demo].[dbo].[DersKazanimlari] dk
+                    FROM [dbo].[DersKazanimlari] dk
                     WHERE dk.ProgramID = dp.ProgramID
                     AND dk.tarih =  @tarih
                 ) THEN 1  -- yoklama var + kazanim var
@@ -88,7 +88,7 @@ SELECT
             CASE 
                 WHEN EXISTS (
                     SELECT 1
-                    FROM [demo].[dbo].[DersKazanimlari] dk
+                    FROM [dbo].[DersKazanimlari] dk
                     WHERE dk.ProgramID = dp.ProgramID
                     AND dk.tarih =  @tarih
                 ) THEN 0  -- yoklama yok ama kazanim var (istersen bunu 0 yapabiliriz)
@@ -98,8 +98,8 @@ SELECT
 
 
 
-FROM [demo].[dbo].[DersProgrami] dp
-INNER JOIN [demo].[dbo].[Siniflar] s 
+FROM [dbo].[DersProgrami] dp
+INNER JOIN [dbo].[Siniflar] s 
     ON dp.Sinif = s.SinifAdi
 
 WHERE dp.OgretmenID = @id AND dp.Gun = @gun
@@ -116,7 +116,7 @@ s.Derslik,
  CASE 
         WHEN EXISTS (
             SELECT 1 
-            FROM [demo].[dbo].[yoklama] y
+            FROM [dbo].[yoklama] y
             WHERE y.ProgramID = dp.ProgramID
             AND y.tarih = @tarih
         )
@@ -124,7 +124,7 @@ s.Derslik,
             CASE 
                 WHEN EXISTS (
                     SELECT 1
-                    FROM [demo].[dbo].[DersKazanimlari] dk
+                    FROM [dbo].[DersKazanimlari] dk
                     WHERE dk.ProgramID = dp.ProgramID
                     AND dk.tarih =  @tarih
                 ) THEN 1  -- yoklama var + kazanim var
@@ -134,7 +134,7 @@ s.Derslik,
             CASE 
                 WHEN EXISTS (
                     SELECT 1
-                    FROM [demo].[dbo].[DersKazanimlari] dk
+                    FROM [dbo].[DersKazanimlari] dk
                     WHERE dk.ProgramID = dp.ProgramID
                     AND dk.tarih =  @tarih
                 ) THEN 0  -- yoklama yok ama kazanim var (istersen bunu 0 yapabiliriz)
@@ -175,7 +175,7 @@ left join Siniflar s on s.SinifAdi = dp.Sinif
                 .input("id", sql.Int, data.id)
                 .query(`
                 DELETE
-                    FROM [demo].[dbo].[DersProgrami]
+                    FROM [dbo].[DersProgrami]
                     WHERE ProgramID = @id
                 `)
             return true
@@ -194,7 +194,7 @@ left join Siniflar s on s.SinifAdi = dp.Sinif
                 .query(`
               
               SELECT *
-                FROM [demo].[dbo].[Kazanim]
+                FROM [dbo].[Kazanim]
                 WHERE Ders = @Ders 
                 AND Sinif = @Sinif
                 ORDER BY Hafta;
@@ -257,11 +257,11 @@ WHEN NOT MATCHED THEN
 
                 SELECT dp.Gun, dp.DersSaati, dp.Sinif, Dp.Ders, o.AdSoyad, s.Derslik
 
-            FROM [demo].[dbo].[DersProgrami] dp 
+            FROM [dbo].[DersProgrami] dp 
 
-            inner join [demo].[dbo].[Ogretmenler] o on dp.OgretmenID = o.OgretmenID 
+            inner join [dbo].[Ogretmenler] o on dp.OgretmenID = o.OgretmenID 
 
-            inner join [demo].[dbo].[Siniflar] s on s.SinifAdi = dp.Sinif
+            inner join [dbo].[Siniflar] s on s.SinifAdi = dp.Sinif
 
             left join kursOgrencileri ko on ko.OgrenciId = @OgrenciId
 
@@ -283,7 +283,7 @@ WHEN NOT MATCHED THEN
             let result = await new sql.Request()
                 .query(`
                         SELECT *
-                        FROM [demo].[dbo].[Dersler] order by isim
+                        FROM [dbo].[Dersler] order by isim
                 `)
             return result.recordset
         } catch (error) {
@@ -298,7 +298,7 @@ WHEN NOT MATCHED THEN
             let result = await new sql.Request()
                 .query(`
                         SELECT *
-                        FROM [demo].[dbo].[Okullar]
+                        FROM [dbo].[Okullar]
                 `)
             return result.recordset
         } catch (error) {
@@ -332,7 +332,7 @@ WHEN NOT MATCHED THEN
                 .input("lesson", sql.NVarChar, data.lesson)
                 .query(`
                     DELETE
-                    FROM [demo].[dbo].[Dersler] where isim = @lesson
+                    FROM [dbo].[Dersler] where isim = @lesson
                 `)
             return true
         } catch (error) {
@@ -376,7 +376,7 @@ WHEN NOT MATCHED THEN
                 .query(`
                    SELECT 
 		o.OgrenciNumara, o.AdSoyad,ko.sinifAdi, o.OgrenciId
-  FROM [demo].[dbo].[kursOgrencileri] ko
+  FROM [dbo].[kursOgrencileri] ko
    inner join Ogrenciler o on o.OgrenciId = ko.OgrenciId
 
    where ko.sinifAdi =  @Sinif
@@ -398,7 +398,7 @@ WHEN NOT MATCHED THEN
 
                 .query(`
                   delete
-                    FROM [demo].[dbo].[kursOgrencileri] where OgrenciId = @OgrenciId and sinifAdi = @Sinif
+                    FROM [dbo].[kursOgrencileri] where OgrenciId = @OgrenciId and sinifAdi = @Sinif
 
                 `)
             return true

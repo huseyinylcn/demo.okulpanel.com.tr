@@ -48,7 +48,7 @@ WHEN NOT MATCHED THEN
   async allTeacherGet() {
     try {
       let result = await new sql.Request()
-        .query(`SELECT * FROM [demo].[dbo].[Ogretmenler] order by AdSoyad`)
+        .query(`SELECT * FROM [dbo].[Ogretmenler] order by AdSoyad`)
       return result.recordsets[0]
     } catch (error) {
       throw new Error(`Sql Kayıt hatası ${error}`)
@@ -62,8 +62,8 @@ WHEN NOT MATCHED THEN
         .query(`
               SELECT dp.*,
                 o.AdSoyad
-              FROM [demo].[dbo].[DersProgrami] dp
-              INNER JOIN [demo].[dbo].[Ogretmenler] o
+              FROM [dbo].[DersProgrami] dp
+              INNER JOIN [dbo].[Ogretmenler] o
                     ON dp.OgretmenID = o.OgretmenID
               WHERE dp.OgretmenID = @id`)
       return result.recordsets[0]
@@ -81,7 +81,7 @@ WHEN NOT MATCHED THEN
 
         .query(`
             SELECT *
-            FROM [demo].[dbo].[DersProgrami] where Gun = @Gun and Sinif = @Sinif
+            FROM [dbo].[DersProgrami] where Gun = @Gun and Sinif = @Sinif
         `)
 
       return result.recordset
@@ -299,9 +299,9 @@ WHEN NOT MATCHED THEN
 
         .query(`
  SELECT tk.fcm_token, o.OgrenciId, o.OgrenciNumara, dp.DersSaati, dp.Ders,o.AdSoyad
-  FROM [demo].[dbo].[FCM_TOKEN] tk
-  inner join [demo].[dbo].[Ogrenciler] o on o.OgrenciId = tk.[user_id]
-  inner join [demo].[dbo].[DersProgrami] dp on dp.ProgramID = @ProgramID
+  FROM [dbo].[FCM_TOKEN] tk
+  inner join [dbo].[Ogrenciler] o on o.OgrenciId = tk.[user_id]
+  inner join [dbo].[DersProgrami] dp on dp.ProgramID = @ProgramID
   where [user_type] = 'student' and [user_id] = @OgrenciID
 
 
@@ -335,7 +335,7 @@ WHEN NOT MATCHED THEN
         .input("puan", sql.NVarChar, data.puan)
         .input("durum", sql.NVarChar, data.durum)
         .input("tarih", sql.Date, data.tarih)
-        .input("OgrenciNo", sql.Int, data.OgrenciNumara)
+        .input("OgrenciNo", sql.NVarChar, data.OgrenciNumara)
         .input("KayitTuru", sql.Int, data.KayitTuru)
         .input("Sinif", sql.NVarChar, data.Sinif)
         .input("OgretmenID", sql.Int, data.OgretmenID)
@@ -397,7 +397,7 @@ WHEN NOT MATCHED THEN
 
         .query(`
       SELECT od.*, o.OgrenciNumara
-      FROM [demo].[dbo].[odev] od 
+      FROM [dbo].[odev] od 
 	  left join Ogrenciler o on o.OgrenciId = od.OgrenciID
 	  
 	  where od.OgretmenID = @OgretmenID
@@ -430,7 +430,7 @@ WHEN NOT MATCHED THEN
 
         .query(`
         delete
-          FROM [demo].[dbo].[odev] where id = @id
+          FROM [dbo].[odev] where id = @id
 
           delete from odevPuanları where odevID = @id
 
@@ -507,7 +507,7 @@ WHEN NOT MATCHED THEN
         .input("OgretmenID", sql.Int, data.OgretmenID)
         .query(`
             SELECT *
-            FROM [demo].[dbo].[sinavlar] where OgretmenID = @OgretmenID
+            FROM [dbo].[sinavlar] where OgretmenID = @OgretmenID
               `)
 
       return result.recordset
@@ -530,7 +530,7 @@ WHEN NOT MATCHED THEN
 
         .input("id", sql.Int, data.SinavID)
         .query(`
-            delete FROM [demo].[dbo].[sinavlar] where id = @id
+            delete FROM [dbo].[sinavlar] where id = @id
 delete from notlar where SinavId = @id
               `)
 
@@ -551,9 +551,9 @@ delete from notlar where SinavId = @id
         .input("id", sql.Int, data.id)
         .query(`
               SELECT  s.id,o.AdSoyad, o.OgrenciId, o.OgrenciNumara, n.puan
-              FROM [demo].[dbo].[sinavlar] s
-              inner join [demo].[dbo].[Ogrenciler]  o on s.Sinif = o.Sinif
-              left join [demo].[dbo].[notlar] n on s.id = n.SinavId and o.OgrenciId = n.OgrenciId
+              FROM [dbo].[sinavlar] s
+              inner join [dbo].[Ogrenciler]  o on s.Sinif = o.Sinif
+              left join [dbo].[notlar] n on s.id = n.SinavId and o.OgrenciId = n.OgrenciId
               where s.id = @id
               `)
 
@@ -608,11 +608,11 @@ delete from notlar where SinavId = @id
  BEGIN TRANSACTION;
 
                     -- 1. notlar tablosu
-                    DELETE FROM [demo].[dbo].[DersProgrami]
+                    DELETE FROM [dbo].[DersProgrami]
                     WHERE OgretmenID = @OgretmenID;
 
                     -- 2. odev tablosu
-                    DELETE FROM [demo].[dbo].[Ogretmenler]
+                    DELETE FROM [dbo].[Ogretmenler]
                     WHERE OgretmenID = @OgretmenID;
 
              
@@ -645,7 +645,7 @@ delete from notlar where SinavId = @id
         .input("Sinif", sql.NVarChar, data.Sinif)
         .query(`
 delete
-  FROM [demo].[dbo].[Siniflar] where SinifAdi = @Sinif
+  FROM [dbo].[Siniflar] where SinifAdi = @Sinif
   
               `)
 
@@ -737,9 +737,9 @@ ORDER BY
         .input("id", sql.Int, data.id)
         .query(`
               SELECT  s.id,o.AdSoyad, o.OgrenciId, o.OgrenciNumara, n.puan
-              FROM [demo].[dbo].[sinavlar] s
-              inner join [demo].[dbo].[Ogrenciler]  o on s.Sinif = o.Sinif
-              left join [demo].[dbo].[notlar] n on s.id = n.SinavId and o.OgrenciId = n.OgrenciId
+              FROM [dbo].[sinavlar] s
+              inner join [dbo].[Ogrenciler]  o on s.Sinif = o.Sinif
+              left join [dbo].[notlar] n on s.id = n.SinavId and o.OgrenciId = n.OgrenciId
               where s.id = @id
               `)
 
@@ -817,8 +817,8 @@ where (ms.aliciTipi = 'teacher' or ms.aliciTipi = 'allteacher' ) and ms.gonderen
 
 
 
-            FROM [demo].[dbo].[mesaj] ms
-            left join [demo].[dbo].[Ogrenciler] o on ms.gonderenTipi = 'student' and ms.gonderenID = o.OgrenciId
+            FROM [dbo].[mesaj] ms
+            left join [dbo].[Ogrenciler] o on ms.gonderenTipi = 'student' and ms.gonderenID = o.OgrenciId
 
 
             where ms.aliciTipi = 'allteacher' or (ms.aliciTipi = 'teacher' and ms.AliciID = @id)
@@ -843,20 +843,20 @@ where (ms.aliciTipi = 'teacher' or ms.aliciTipi = 'allteacher' ) and ms.gonderen
         .input("KayitTuru", sql.Int, data.KayitTuru)
 
         .query(`
-                IF (SELECT KayitTuru FROM [demo].[dbo].[odev] WHERE id = @id) = 0
+                IF (SELECT KayitTuru FROM [dbo].[odev] WHERE id = @id) = 0
                 BEGIN
                     SELECT ogrenci.AdSoyad,ogrenci.OgrenciNumara, odev.TeslimTarihi, odev.id, ogrenci.OgrenciId, p.puan , odev.KayitTuru
-                    FROM [demo].[dbo].[odev] odev
-                    INNER JOIN [demo].[dbo].[Ogrenciler] ogrenci ON ogrenci.Sinif = odev.Sinif
-                    LEFT JOIN [demo].[dbo].[odevPuanları] p ON odev.id = p.odevID AND p.OgrenciID = ogrenci.OgrenciId
+                    FROM [dbo].[odev] odev
+                    INNER JOIN [dbo].[Ogrenciler] ogrenci ON ogrenci.Sinif = odev.Sinif
+                    LEFT JOIN [dbo].[odevPuanları] p ON odev.id = p.odevID AND p.OgrenciID = ogrenci.OgrenciId
                     WHERE odev.id = @id
                 END
                 ELSE
                 BEGIN
                     SELECT ogrenci.AdSoyad,ogrenci.OgrenciNumara, odev.TeslimTarihi, odev.id, ogrenci.OgrenciId, p.puan , odev.KayitTuru
-                    FROM [demo].[dbo].[odev] odev
-                    INNER JOIN [demo].[dbo].[Ogrenciler] ogrenci ON ogrenci.OgrenciId = odev.OgrenciID
-                    LEFT JOIN [demo].[dbo].[odevPuanları] p ON odev.id = p.odevID AND p.OgrenciID = ogrenci.OgrenciId
+                    FROM [dbo].[odev] odev
+                    INNER JOIN [dbo].[Ogrenciler] ogrenci ON ogrenci.OgrenciId = odev.OgrenciID
+                    LEFT JOIN [dbo].[odevPuanları] p ON odev.id = p.odevID AND p.OgrenciID = ogrenci.OgrenciId
                     WHERE odev.id = @id
                 END
               `)
@@ -915,7 +915,7 @@ where (ms.aliciTipi = 'teacher' or ms.aliciTipi = 'allteacher' ) and ms.gonderen
     o.AdSoyad,
     o.OgrenciNumara,
     s.SinavAdi
-FROM [demo].[dbo].[DersProgrami] dp 
+FROM [dbo].[DersProgrami] dp 
 LEFT JOIN sinavlar s 
     ON s.Ders = dp.Ders
 LEFT JOIN notlar n 
@@ -927,7 +927,7 @@ LEFT JOIN Ogrenciler o
 
 
     SELECT og.AdSoyad,og.OgrenciNumara, o.DersAdi, o.TeslimTarihi,op.puan
-  FROM [demo].[dbo].[odevPuanları] op
+  FROM [dbo].[odevPuanları] op
   inner join odev o on o.id = op.odevID
   inner join Ogrenciler og on og.OgrenciId = op.OgrenciID
 
@@ -949,7 +949,7 @@ LEFT JOIN Ogrenciler o
   async homeworkNotfication(data) {
     try {
       let result = await new sql.Request()
-        .input("id", sql.Int, data.OgrenciNumara)
+        .input("id", sql.NVarChar, data.OgrenciNumara)
         .input("OgretmenID", sql.Int, data.OgretmenID)
 
         .query(`
@@ -1275,6 +1275,156 @@ ORDER BY
       throw new Error("SQL Hatası")
     }
   },
+
+
+
+
+
+  
+    async examHomeworkTrialReport(data) {
+    try {
+      let result = await new sql.Request()
+        .input("Sinif", sql.NVarChar, data.Sinif)
+   
+
+        .query(`
+
+            
+
+SELECT 
+'Sinav' AS tip,
+o.AdSoyad, o.Sinif, o.OgrenciNumara, 
+s.Ders
+,CASE 
+
+        WHEN n.puan IS NULL THEN N'Puanlanmadı'  
+        ELSE n.puan                 
+    END AS puan
+FROM dbo.Ogrenciler o
+
+LEFT JOIN dbo.sinavlar s ON s.Sinif = o.Sinif 
+LEFT JOIN dbo.notlar n ON n.SinavId = s.id AND n.OgrenciId = o.OgrenciId
+
+WHERE o.Sinif = @Sinif
+
+  
+UNION ALL
+ SELECT 
+ 'Sinav' AS tip,
+ o.AdSoyad,k.sinifAdi, o.OgrenciNumara,
+ s.Ders
+ ,CASE 
+
+        WHEN n.puan IS NULL THEN N'Puanlanmadı'  
+        ELSE n.puan                 
+    END AS puan
+ FROM dbo.Ogrenciler o 
+ INNER JOIN dbo.kursOgrencileri k ON k.OgrenciId = o.OgrenciId
+  INNER JOIN dbo.sinavlar s ON s.Sinif = k.sinifAdi
+  LEFT JOIN dbo.notlar n ON n.SinavId = s.id AND o.OgrenciId = n.OgrenciId
+
+
+ WHERE o.Sinif = @Sinif;
+
+
+
+
+
+
+
+WITH sonuc AS(
+    SELECT AdSoyad,TCKimlikNo,OgrenciNumara,Sinif,OgrenciId,kitapcik,responseKeyName,turkceDogru,turkceYanlis,turkceBos,sosyalDogru,sosyalYanlis,sosyalBos,dinDogru,dinYanlis,dinBos,ingilizceDogru,ingilizceYanlis,ingilizceBos,matematikDogru,matematikYanlis,matematikBos,fenDogru,fenYanlis,fenBos,id,trial_id
+
+						,(dbo.puanHesaplama(turkceDogru,turkceYanlis, sosyalDogru,sosyalYanlis, dinDogru,dinYanlis, ingilizceDogru, ingilizceYanlis) + dbo.puanHesaplama2(matematikDogru,matematikYanlis,fenDogru, fenYanlis) +190.8754 ) AS puan
+                        ,dbo.NetHesaplama(turkceDogru,turkceYanlis) AS turkceNet
+                        ,dbo.NetHesaplama(sosyalDogru,sosyalYanlis) AS sosyalNet
+                        ,dbo.NetHesaplama(dinDogru,dinYanlis) AS dinNet
+                        ,dbo.NetHesaplama(ingilizceDogru,ingilizceYanlis) AS ingilizceNet
+                        ,dbo.NetHesaplama(matematikDogru,matematikYanlis) AS matematikNet
+                        ,dbo.NetHesaplama(fenDogru,fenYanlis) AS fenNet
+						
+
+
+                        from trialResponse 
+
+                        where Sinif = @Sinif
+) select *, (ss.turkceNet+ ss.sosyalNet + ss.dinNet + ss.ingilizceNet + ss.matematikNet+ ss.fenNet) as toplamNet, 'Deneme' AS tip from sonuc ss
+ INNER JOIN dbo.trials tt ON tt.id = ss.id
+
+ORDER by  tt.[date] DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT o.AdSoyad, o.Sinif, o.OgrenciNumara,od.DersAdi,od.Konu,od.TeslimTarihi ,'Odev' AS tip
+
+,CASE 
+        WHEN odpuan.puan = 0 THEN N'Yapılmadı'        
+        WHEN odpuan.puan = 50 THEN N'Yarım Yaptı'    
+        WHEN odpuan.puan = 100 THEN N'Yapıldı'        
+        WHEN odpuan.puan IS NULL THEN N'Puanlanmadı'  
+        ELSE N'Bilinmiyor/Diğer Puan'                  
+    END AS puan
+
+FROM dbo.Ogrenciler o 
+
+INNER JOIN dbo.odev od ON od.Sinif = o.Sinif OR o.OgrenciId = od.OgrenciID
+
+LEFT JOIN dbo.odevPuanları odpuan ON odpuan.odevID = od.id AND odpuan.OgrenciID = o.OgrenciId
+
+
+WHERE o.Sinif = @Sinif 
+
+UNION ALL
+
+
+SELECT o.AdSoyad,k.sinifAdi, o.OgrenciNumara, od.DersAdi, od.Konu,od.TeslimTarihi ,'Odev' AS tip
+,CASE 
+        WHEN odpuan.puan = 0 THEN N'Yapılmadı'        
+        WHEN odpuan.puan = 50 THEN N'Yarım Yaptı'    
+        WHEN odpuan.puan = 100 THEN N'Yapıldı'        
+        WHEN odpuan.puan IS NULL THEN N'Puanlanmadı'  
+        ELSE N'Bilinmiyor/Diğer Puan'                  
+    END AS puan
+
+
+FROM dbo.Ogrenciler o 
+
+INNER JOIN dbo.kursOgrencileri k ON k.OgrenciId = o.OgrenciId
+INNER JOIN dbo.odev od ON od.Sinif = k.sinifAdi
+LEFT JOIN dbo.odevPuanları odpuan ON odpuan.odevID = od.id AND odpuan.OgrenciID = o.OgrenciId
+
+WHERE o.Sinif = @Sinif
+   ORDER BY od.DersAdi
+
+
+
+
+
+
+
+
+
+
+
+
+
+              `)
+      return result.recordsets
+    } catch (error) {
+      throw new Error("SQL Hatası")
+    }
+  },
+
+
 
 
 

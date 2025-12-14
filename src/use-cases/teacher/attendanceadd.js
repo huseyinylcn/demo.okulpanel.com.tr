@@ -49,7 +49,7 @@ async function attendanceadd(data, { TeacherRepository, sendNotification }) {
                 sendNotification(
                     element.fcm_token,
                     "Devamsızlık Bilgisi",
-                    `${element.AdSoyad} ${data.tarih} ${element.DersSaati} tarihinde ki ${element.Ders} dersine katılmamıştır.`,
+                    `${element.AdSoyad} ${element.DersSaati} saatinde ki ${element.Ders} dersine katılmamıştır.`,
                     { customKey: "customValue" }
                 );
 

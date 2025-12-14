@@ -1,7 +1,5 @@
 async function gainadd(data,{scheduleRepository}) {
-    // let result = await scheduleRepository.gainadd(data)
-    let result = true
-
+    let result = await scheduleRepository.gainadd(data)
     return result
 }
 

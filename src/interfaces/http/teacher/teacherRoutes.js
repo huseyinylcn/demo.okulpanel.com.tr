@@ -36,7 +36,11 @@ router.post("/v2/exam/point/add",jwtService.authenticateToken,teacherController.
 router.post("/delete",jwtService.authenticateToken,teacherController.deletee)
 router.post("/class/delete",jwtService.authenticateToken,teacherController.classdeletee)
 router.post("/attendanceRapor",jwtService.authenticateToken,teacherController.attendanceRapor)
+
 router.post("/attendance/idare/rapor",jwtService.authenticateToken,teacherController.attendanceIdareRapor)
+
+router.post("/v1/exam/homework/tril/rapor",jwtService.authenticateToken,teacherController.examHomeworkTrialReport)
+
 
 router.post("/point/rapor",jwtService.authenticateToken,teacherController.pointRapor)
 

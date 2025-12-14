@@ -3,7 +3,7 @@
 
 class StudentEnity{
     constructor({Sinif,OgrenciNumara,AdSoyad,TCKimlikNo,Cinsiyet,DogumTarihi,
-        AnneAdSoyad,BabaAdSoyad,VeliDurum,Sag,Engel,AnneEgitim,BabaEgitim,AnneMeslek,BabaMeslek,SuregenRahatsizlik,AylikGelir,AnneTel,BabaTel,photo }){
+        AnneAdSoyad,BabaAdSoyad,VeliDurum,Sag,Engel,AnneEgitim,BabaEgitim,AnneMeslek,BabaMeslek,SuregenRahatsizlik,AylikGelir,AnneTel,BabaTel,photo,ucretYok }){
         
         if (!AdSoyad || AdSoyad == 'null' || AdSoyad == 'undefined')                        throw new Error("Ad Soyad Girilmemiş")
         if (!OgrenciNumara  || OgrenciNumara == 'null' || OgrenciNumara == 'undefined')     throw new Error("Öğrenci Numarası Girilmemiş")
@@ -17,7 +17,7 @@ class StudentEnity{
         this.BabaAdSoyad = BabaAdSoyad
         this.AnneAdSoyad = AnneAdSoyad
         this.TCKimlikNo = TCKimlikNo
-        this.Cinsiyet = Cinsiyet
+        this.Cinsiyet = Number(Cinsiyet)
         this.DogumTarihi = DogumTarihi
         this.AnneEgitim = AnneEgitim
         this.BabaEgitim = BabaEgitim
@@ -31,6 +31,8 @@ class StudentEnity{
         this.VeliDurum = VeliDurum
         this.Sag = Sag
         this.photo = photo
+        this.ucretYok = ucretYok
+
 
 
     }

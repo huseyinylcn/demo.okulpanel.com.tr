@@ -17,6 +17,8 @@ const schedule = require("./interfaces/http/schedule/scheduleRoutes")
 const users = require("./interfaces/http/users/usersRoutes")
 const demo = require("./interfaces/http/demo/demoRoutes")
 const trial = require("./interfaces/http/trial/trialRoutes")
+const finance = require("./interfaces/http/finance/financeRoutes")
+
 
 
 
@@ -29,6 +31,8 @@ app.use("/api/schedule",schedule)
 app.use("/api/user",users)
 app.use("/api/demoTalep",demo)
 app.use("/api/trial",trial)
+app.use("/api/finance",finance)
+
 
 
 // app.use("/admin",admin)

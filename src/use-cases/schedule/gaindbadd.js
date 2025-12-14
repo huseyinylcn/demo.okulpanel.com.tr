@@ -1,9 +1,7 @@
 async function gaindbadd(data,{scheduleRepository}) {
     
 
-    // let result = scheduleRepository.gaindbadd(data)
-    let result = true
-
+    let result = scheduleRepository.gaindbadd(data)
     return result
 }
 

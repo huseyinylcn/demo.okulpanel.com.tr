@@ -33,8 +33,6 @@ let demoRepository = {
                         ,@mesaj
                         
                         )
-                    
-                    
                     `)
                     return true
 
