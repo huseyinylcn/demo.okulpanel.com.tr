@@ -4,6 +4,7 @@ const logyaz = require("./../../utils/logSave")
 
 
 async function mesaj(data, { userRepository, sendNotification }) {
+    return [];
     logyaz(JSON.stringify(data))
     data = await new mesajEnity(data)
 

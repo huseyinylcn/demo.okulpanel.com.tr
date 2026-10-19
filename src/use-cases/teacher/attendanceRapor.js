@@ -122,6 +122,7 @@ async function attendanceRapor(data, { TeacherRepository }) {
     const zipBuffer = zip.toBuffer();
     return zipBuffer;
   }
+  
 
 
   const result = await TeacherRepository.attendanceRapor(data);

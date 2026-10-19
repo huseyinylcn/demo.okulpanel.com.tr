@@ -17,6 +17,8 @@ const statisticsClassUseCase = require("./../../../use-cases/trial/statisticsCla
 const statisticsClassWebUseCase = require("./../../../use-cases/trial/statisticsClassWeb")
 
 let statisticsSelectTrialUseCase = require("./../../../use-cases/trial/statisticsSelectTrial")
+let statisticsSelectTrialXlsxUseCase = require("./../../../use-cases/trial/statisticsSelectTrialXlsx")
+
 let statisticsGainUseCase = require("./../../../use-cases/trial/statisticsGain")
 
 
@@ -265,4 +267,22 @@ async function statisticsClassWeb(req, res) {
     }
 }
 
-module.exports = { schemaAdd,statisticsClassWeb,trialResultGetXlsx, schemaGet,statisticsGain, schemaRead,responseKey,responseKeyGet,trialReadAdd,trialGet,trialResultGet,trialPublic,trialDelete,studentTrialGet, studentTrialGetOne,statisticsClass,statisticsSelectTrial }
+
+async function statisticsSelectTrialXlsx(req, res) {
+    try {
+
+
+        let result = await statisticsSelectTrialXlsxUseCase(req.body, { trialRepository,statisticsSelectTrialUseCase })
+      
+
+         res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="ogrenci_sonuclari.csv"');
+        res.status(200).send(result);
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+    }
+}
+
+module.exports = { schemaAdd,statisticsClassWeb,trialResultGetXlsx, schemaGet,statisticsGain, schemaRead,responseKey,responseKeyGet,trialReadAdd,trialGet,trialResultGet,trialPublic,trialDelete,studentTrialGet, studentTrialGetOne,statisticsClass,statisticsSelectTrial ,statisticsSelectTrialXlsx }

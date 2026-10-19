@@ -30,29 +30,24 @@ function authenticateToken(req, res, next) {
     }
 
     let degistirmeTarihi = await userRepository.passwordChangeDateGet({ id: String(user.id), rol: String(user.rol) })
-console.log({ id: String(user.id), rol: String(user.rol) })
 
 
-    if (!user.time) {
+    // ileride token içerisinde bunlar yok ise token geçersiz kılınacak.
+    if (!user.time || !degistirmeTarihi[0].change) {
       req.user = user;
       next()
-    }
+    } else {
+      let girisTarihi = new Date(user.time)
 
-    if (!degistirmeTarihi[0].change ) {
+
+      if (degistirmeTarihi[0].change > girisTarihi) {
+        return res.status(403).json({ message: 'Token geçersiz veya süresi dolmuş', code: "0x4401" });
+      }
       req.user = user;
-      next()
+      next();
+
     }
 
-
-
-    let girisTarihi = new Date(user.time)
-
-
-    if (degistirmeTarihi[0].change > girisTarihi) {
-      return res.status(403).json({ message: 'Token geçersiz veya süresi dolmuş', code: "0x4401" });
-    }
-    req.user = user;
-    next();
 
   });
 }

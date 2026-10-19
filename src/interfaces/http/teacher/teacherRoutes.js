@@ -38,6 +38,8 @@ router.post("/class/delete",jwtService.authenticateToken,teacherController.class
 router.post("/attendanceRapor",jwtService.authenticateToken,teacherController.attendanceRapor)
 
 router.post("/attendance/idare/rapor",jwtService.authenticateToken,teacherController.attendanceIdareRapor)
+router.post("/attendance/weekend/rapor",jwtService.authenticateToken,teacherController.attendanceRaporWeekEnd)
+
 
 router.post("/v1/exam/homework/tril/rapor",jwtService.authenticateToken,teacherController.examHomeworkTrialReport)
 

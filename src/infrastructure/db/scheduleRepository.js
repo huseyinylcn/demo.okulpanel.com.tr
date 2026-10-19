@@ -639,7 +639,38 @@ WHEN NOT MATCHED THEN
         .input("ProgramID",sql.Int,data.ProgramID)
         .input("tarih",sql.NVarChar,data.tarih)
         .query(`
-            select kazanim, ProgramID  from DersKazanimlari where ProgramID = @ProgramID and tarih = @tarih
+            DECLARE @OncekiProgramID INT;
+DECLARE @MevcutSinif NVARCHAR(50);
+DECLARE @MevcutDersSaati NVARCHAR(50);
+DECLARE @MevcutGun NVARCHAR(20);
+DECLARE @prg INT = @ProgramID;
+DECLARE @trh Date = @tarih;
+
+
+
+
+SELECT 
+    @MevcutSinif = Sinif, 
+    @MevcutDersSaati = DersSaati,
+    @MevcutGun = Gun
+FROM DersProgrami 
+WHERE ProgramID = @prg;
+
+-- Şimdi bu bilgilerle bir önceki dersi bulalım
+SELECT TOP 1 @OncekiProgramID = ProgramID
+FROM DersProgrami
+WHERE Sinif = @MevcutSinif 
+  AND Gun = @MevcutGun
+  AND LEFT(DersSaati, 5) < LEFT(@MevcutDersSaati, 5) 
+ORDER BY LEFT(DersSaati, 5) DESC;
+
+SELECT 
+  
+    @prg as ProgramID,
+    (SELECT TOP 1 kazanim FROM DersKazanimlari WHERE ProgramID = @prg AND tarih = @trh) as kazanim,
+    (SELECT TOP 1 kazanim FROM DersKazanimlari WHERE ProgramID = @OncekiProgramID AND tarih = @trh) AS OncekiKazanim;
+
+
             `)
 
             if (result.recordset[0] == undefined) return 0

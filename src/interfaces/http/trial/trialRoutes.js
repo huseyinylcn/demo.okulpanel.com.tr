@@ -38,6 +38,8 @@ router.post("/statistics/class",jwtService.authenticateToken,trialController.sta
 router.post("/statistics/class/web",jwtService.authenticateToken,trialController.statisticsClassWeb)
 
 router.post("/statistics/select/trial",jwtService.authenticateToken,trialController.statisticsSelectTrial)
+router.post("/statistics/select/trial/xlsx",jwtService.authenticateToken,trialController.statisticsSelectTrialXlsx)
+
 router.post("/statistics/gain",jwtService.authenticateToken,trialController.statisticsGain)
 
 

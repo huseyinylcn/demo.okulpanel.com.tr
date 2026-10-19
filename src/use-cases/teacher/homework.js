@@ -2,7 +2,7 @@ const logyaz = require("./../../utils/logSave")
 
 
 async function homework(data, { TeacherRepository, userRepository, sendNotification }) {
-
+    return true
     if (data.KayitTuru == 0) {
 
 

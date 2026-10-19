@@ -104,12 +104,28 @@ WHEN NOT MATCHED THEN
 
         .query(`
                 
- IF EXISTS (
+
+DECLARE @OncekiProgramID INT;
+
+SELECT TOP 1 @OncekiProgramID = ProgramID
+FROM DersProgrami
+WHERE Sinif = @Sinif 
+  AND Gun = (SELECT TOP 1 Gun FROM DersProgrami WHERE ProgramID = @ProgramID)
+ 
+  AND LEFT(DersSaati, 5) < LEFT(@DersSaati, 5) 
+ORDER BY LEFT(DersSaati, 5) DESC;
+
+
+
+
+
+
+IF EXISTS (
  select * from grupOgrencileri where ProgramID = @ProgramID
-            )
- BEGIN
- 
-            select 
+   )
+BEGIN
+
+  select 
 
                 o.OgrenciId,
                 o.OgrenciNumara,
@@ -119,12 +135,17 @@ WHEN NOT MATCHED THEN
                 dp.DersSaati,
                 dp.Ders,
                 @tarih as tarih,
-                y.durum
+                y.durum,
+			(SELECT TOP 1 durum 
+			FROM yoklama 
+		WHERE OgrenciID = o.OgrenciId 
+		   AND ProgramID = @OncekiProgramID 
+		   AND tarih =  @tarih) AS oncekiDurum
 
             from grupOgrencileri gp
             inner join Ogrenciler o on o.OgrenciId = gp.OgrenciID 
             left join DersProgrami dp on dp.ProgramID = gp.ProgramID
-            left join yoklama y on o.OgrenciId = y.OgrenciID  AND dp.ProgramID = y.ProgramID and y.tarih =   @tarih
+            left join yoklama y on o.OgrenciId = y.OgrenciID  AND dp.ProgramID = y.ProgramID and y.tarih =     @tarih
 
             where gp.ProgramID = @ProgramID  AND dp.DersSaati = @DersSaati AND o.Sinif = @Sinif
             
@@ -144,7 +165,7 @@ WHEN NOT MATCHED THEN
     LEFT JOIN yoklama y
       ON o.OgrenciId = y.OgrenciID
        AND dp.ProgramID = y.ProgramID
-       AND y.tarih =  @tarih
+       AND y.tarih =   @tarih
     WHERE o.Sinif = @Sinif
       AND dp.DersSaati = @DersSaati
       AND dp.ProgramID = @ProgramID
@@ -159,8 +180,15 @@ WHEN NOT MATCHED THEN
       dp.Gun,
       dp.DersSaati,
       dp.Ders,
-        @tarih as tarih,
-      y.durum
+          @tarih as tarih,
+      y.durum,
+		(SELECT TOP 1 durum 
+			FROM yoklama 
+		WHERE OgrenciID = o.OgrenciId 
+		   AND ProgramID = @OncekiProgramID 
+		   AND tarih =  @tarih) AS oncekiDurum
+
+
     FROM Ogrenciler o
     INNER JOIN DersProgrami dp
       ON o.Sinif = dp.Sinif
@@ -168,11 +196,11 @@ WHEN NOT MATCHED THEN
       ON o.OgrenciId = y.OgrenciID
        AND dp.ProgramID = y.ProgramID
 
-       AND y.tarih =   @tarih
+       AND y.tarih =     @tarih
 
     WHERE o.Sinif = @Sinif
       AND dp.DersSaati = @DersSaati
-      AND dp.ProgramID =  @ProgramID
+      AND dp.ProgramID = @ProgramID
      
      -- EKLEME 2
      ORDER BY TRY_CAST(o.OgrenciNumara AS INT) ASC
@@ -189,20 +217,25 @@ WHEN NOT MATCHED THEN
       dp.Gun,
       dp.DersSaati,
       dp.Ders,
-       @tarih as tarih,
-      y.durum
+         @tarih as tarih,
+      y.durum,
+		(SELECT TOP 1 durum 
+			FROM yoklama 
+		WHERE OgrenciID = o.OgrenciId 
+		   AND ProgramID = @OncekiProgramID 
+		   AND tarih =  @tarih) AS oncekiDurum
 
      FROM kursOgrencileri ko
 
      left JOIN DersProgrami dp on dp.Sinif = ko.sinifAdi
 
      LEFT JOIN Ogrenciler o on ko.OgrenciId = o.OgrenciId
-     left join yoklama y on ko.OgrenciId = y.OgrenciID  AND dp.ProgramID = y.ProgramID and y.tarih =   @tarih
+     left join yoklama y on ko.OgrenciId = y.OgrenciID  AND dp.ProgramID = y.ProgramID and y.tarih =     @tarih
 
      where 
      ko.sinifAdi = @Sinif and 
      dp.DersSaati = @DersSaati and 
-     dp.ProgramID =  @ProgramID
+     dp.ProgramID = @ProgramID
       
       -- EKLEME 3
       ORDER BY TRY_CAST(o.OgrenciNumara AS INT) ASC
@@ -679,14 +712,19 @@ WITH RankedStudents AS (
         y.Gun,
         y.Sinif,
         dk.kazanim,
+		og.AdSoyad,
+	
         o.OgrenciNumara,
-        TRY_CAST(o.OgrenciNumara AS INT) AS SıralamaNumarası, -- Sayısal dönüşüm burada yapılıyor
+        TRY_CAST(o.OgrenciNumara AS INT) AS SıralamaNumarası, 
         y.durum
     FROM yoklama y
     LEFT JOIN DersKazanimlari dk
         ON dk.tarih = y.tarih AND dk.ProgramID = y.ProgramID
     LEFT JOIN Ogrenciler o
         ON o.OgrenciId = y.OgrenciID
+
+	LEFT JOIN DersProgrami dp ON dp.ProgramID = y.ProgramID
+    LEFT JOIN Ogretmenler og ON og.OgretmenID = dp.OgretmenID
     WHERE
         y.Sinif = @Sinif
         AND y.tarih >= @baslangictarih
@@ -699,10 +737,11 @@ SELECT
     Gun,
     Sinif,
     kazanim,
-    -- Sayısal olarak sıralanmış öğrenci numaralarını birleştir
+	AdSoyad,
+   
     COALESCE(
         STRING_AGG(CASE WHEN durum = 0 THEN OgrenciNumara ELSE NULL END, ', ') 
-        WITHIN GROUP (ORDER BY SıralamaNumarası), -- Buradaki sayısal sütunu kullan
+        WITHIN GROUP (ORDER BY SıralamaNumarası), 
         'TAM'
     ) AS OgrenciNumara
 FROM RankedStudents
@@ -712,6 +751,7 @@ GROUP BY
     DersSaati,
     Gun,
     Sinif,
+	AdSoyad,
     kazanim
 ORDER BY
     tarih, DersSaati;
@@ -727,6 +767,81 @@ ORDER BY
       throw new Error(`SQL GET HATASI ${error.message}`)
     }
   },
+
+  async attendanceRaporWeekEnd(data) {
+    try {
+
+      let result = await new sql.Request()
+
+        .input("Sinif", sql.NVarChar, data.Sinif)
+        .input("baslangictarih", sql.Date, data.baslangictarih)
+        .input("bitistarih", sql.Date, data.bitistarih)
+
+
+        .query(`
+WITH RankedStudents AS (
+    SELECT
+        y.tarih,
+        y.Ders,
+        y.DersSaati,
+        y.Gun,
+        y.Sinif,
+        dk.kazanim,
+		og.AdSoyad,
+        o.OgrenciNumara,
+        TRY_CAST(o.OgrenciNumara AS INT) AS SıralamaNumarası, -- Sayısal dönüşüm burada yapılıyor
+        y.durum
+    FROM yoklama y
+    LEFT JOIN DersKazanimlari dk
+        ON dk.tarih = y.tarih AND dk.ProgramID = y.ProgramID
+    LEFT JOIN Ogrenciler o
+        ON o.OgrenciId = y.OgrenciID
+
+		LEFT JOIN DersProgrami dp ON dp.ProgramID = y.ProgramID
+    LEFT JOIN Ogretmenler og ON og.OgretmenID = dp.OgretmenID
+    WHERE
+        y.Sinif = @Sinif
+        AND y.tarih >= @baslangictarih
+        AND y.tarih <= @bitistarih
+
+)
+SELECT
+    tarih,
+    Ders,
+    DersSaati,
+    Gun,
+    Sinif,
+    kazanim,
+	AdSoyad,
+    -- Sayısal olarak sıralanmış öğrenci numaralarını birleştir
+    COALESCE(
+        STRING_AGG(CASE WHEN durum = 0 THEN OgrenciNumara ELSE NULL END, ', ') 
+        WITHIN GROUP (ORDER BY SıralamaNumarası), -- Buradaki sayısal sütunu kullan
+        'TAM'
+    ) AS OgrenciNumara
+FROM RankedStudents
+GROUP BY
+    tarih,
+    Ders,
+    DersSaati,
+    Gun,
+    Sinif,
+    kazanim,
+	AdSoyad
+ORDER BY
+    tarih, DersSaati;
+  
+              `)
+
+      return result.recordset
+
+    } catch (error) {
+      console.log(error)
+      logyaz(error)
+      throw new Error(`SQL GET HATASI ${error.message}`)
+    }
+  },
+
 
 
   async pointRapor(data) {

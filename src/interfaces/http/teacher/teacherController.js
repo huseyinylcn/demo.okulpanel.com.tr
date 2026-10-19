@@ -27,6 +27,8 @@ const examPointAddUseCase = require("./../../../use-cases/teacher/examPointAdd")
 const deleteeUseCase = require("./../../../use-cases/teacher/deletee")
 const classdeleteeUseCase = require("./../../../use-cases/teacher/classdeletee")
 const attendanceRaporUseCase = require("./../../../use-cases/teacher/attendanceRapor")
+const attendanceRaporWeekEndUseCase = require("./../../../use-cases/teacher/attendanceRaporWeekEnd")
+
 const pointRaporUseCase = require("./../../../use-cases/teacher/pointRapor")
 const mesajgetUseCase = require("./../../../use-cases/teacher/mesajget")
 const mesajGetV2UseCase = require("./../../../use-cases/teacher/mesajGetV2")
@@ -309,6 +311,43 @@ async function attendanceRapor(req, res) {
         res.status(400).json({ error: error })
     }
 }
+
+async function attendanceRapor(req, res) {
+    try {
+        let result = await attendanceRaporUseCase(req.body, { TeacherRepository })
+
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=gunluk_rapor.pdf");
+        res.status(200).send(result);
+
+
+    } catch (error) {
+        console.log(error)
+        logyaz(error)
+        res.status(400).json({ error: error })
+    }
+}
+
+
+async function attendanceRaporWeekEnd(req, res) {
+    try {
+        let result = await attendanceRaporWeekEndUseCase(req.body, { TeacherRepository })
+
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=gunluk_rapor.pdf");
+        res.status(200).send(result);
+
+
+    } catch (error) {
+        console.log(error)
+        logyaz(error)
+        res.status(400).json({ error: error })
+    }
+}
+
+
+
+
 async function pointRapor(req, res) {
     try {
         let result = await pointRaporUseCase(req.body, { TeacherRepository })
@@ -535,4 +574,5 @@ async function examHomeworkTrialReport(req,res) {
 
 module.exports = { create,attandanceWarning,homeworkPointAddV2,examPointAdd, allTeacher,attendanceIdareRapor,lessonAssignmentGet,lessonAssignmentDelete,
     attendanceAddNew, schedule, dersler,mesajget,filecreae, attendance, attendanceadd, homeworkpoint, homeworkpointadd, homework,pointRapor, homeworkget, 
-    homeworkdelete, exam, examget, examdelete, point, pointadd, deletee,classdeletee ,attendanceRapor, studentRapor, lessonAssignment, mesajGetV2,examHomeworkTrialReport}
+    homeworkdelete, exam, examget, examdelete, point, pointadd, deletee,classdeletee ,attendanceRapor, studentRapor, lessonAssignment, mesajGetV2,
+    examHomeworkTrialReport,attendanceRaporWeekEnd}
